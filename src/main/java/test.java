@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class test {
     public static void main(String[] args){
-        UpdateUser update = new UpdateUser("D01", 1000);
+        //UpdateUser update = new UpdateUser("D01", 1000);
         ArrayList<Staff> staffList = new ArrayList();
         staffList.add(new Staff("Haikal", "D01", 100));
         staffList.add(new Staff("Akmal", "D02", 100));
@@ -17,7 +17,7 @@ public class test {
         
         ShowStaff(staffList);
         
-        update.execute(staffList);
+        //update.execute(staffList);
         
         ShowStaff(staffList);
     }

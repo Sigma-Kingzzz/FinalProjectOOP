@@ -1,12 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 import java.util.ArrayList;
-/**
- *
- * @author muhai
- */
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 public class AddUser extends UserManagement {
     
     private Staff newStaff;
@@ -18,7 +14,11 @@ public class AddUser extends UserManagement {
     public void execute(ArrayList<Staff> StaffList){
         for(Staff s : StaffList){
             if(s.getStaffId().equals(newStaff.getStaffId())){
-                System.out.println("Staff ID " + newStaff.getStaffId() + " Already Exists. ");
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Duplicate Staff ID");
+                alert.setContentText("Staff ID " + newStaff.getStaffId() + " already exist.");
+                alert.showAndWait();
                 return;
             }
         }

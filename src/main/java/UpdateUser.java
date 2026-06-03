@@ -11,17 +11,16 @@ import java.util.ArrayList;
  * @author muhai
  */
 public class UpdateUser extends UserManagement {
-    private String staffId;
-    private double salary;
-    public UpdateUser(String staffId, double salary){
-        this.staffId = staffId;
-        this.salary = salary;
+    private Staff updateStaff;
+    public UpdateUser(Staff updateStaff){
+        this.updateStaff = updateStaff;
     }
     @Override
     public void execute(ArrayList<Staff> StaffList){
         for(Staff s : StaffList){
-            if(s.getStaffId().equals(staffId)){
-                s.setSalary(salary);
+            if(s.getStaffId().equals(updateStaff.getStaffId())){
+                s.setStaffName(updateStaff.getStaffName());
+                s.setSalary(updateStaff.getSalary());
                 return;
             }
         }
