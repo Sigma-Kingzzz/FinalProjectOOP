@@ -9,22 +9,23 @@ package Employee;
  * @author haziq
  */
 public abstract class Employee {
-    private int employeeID;
+    private String employeeID;
     private String name;
     private double basicSalary;
+    private String status;
     
     //Constructor
-    public Employee(int employeeID, String name, double basicSalary){
+    public Employee(String employeeID, String name, double basicSalary){
         this.employeeID=employeeID;
         this.name=name;
         this.basicSalary=basicSalary;
     }
     
     //Getters and Setters 
-    public int getEmployeeID(){
+    public String getEmployeeID(){
         return employeeID;
     }
-    public void setEmployeeID(int employeeID){
+    public void setEmployeeID(String employeeID){
         this.employeeID=employeeID;
     }
     
