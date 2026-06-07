@@ -1,4 +1,4 @@
-
+import Employee.Employee;
 import java.util.ArrayList;
 
 /*
@@ -11,20 +11,23 @@ import java.util.ArrayList;
  * @author muhai
  */
 public class DeleteUser extends UserManagement{
-    private String staffId;
-    public DeleteUser(String staffId){
-        this.staffId = staffId;
+    private String employeeId; // Renamed variable from staffId to match your project terminology
+    
+    public DeleteUser(String employeeId){
+        this.employeeId = employeeId;
     }
+    
+    // CHANGED: Accepts an ArrayList of generic Employees
     @Override
-    public void execute(ArrayList<Staff> StaffList){
-        int index;
-        for(Staff s : StaffList){
-            if(s.getStaffId().equals(staffId)){
-                index = StaffList.indexOf(s);
-                StaffList.remove(index);
-                return;
+    public void execute(ArrayList<Employee> staffList){
+        for(Employee s : staffList){
+            // CHANGED: Use getEmployeeID() instead of getStaffId()
+            if(s.getEmployeeID().equals(employeeId)){
+                staffList.remove(s); // Directly removes the found employee object
+                System.out.println("Employee Deleted Successfully.");
+                return; // Stop the loop immediately after deleting
             }
         }
-        System.out.println("Delete User. ");
+        System.out.println("Employee ID not found.");
     }
 }

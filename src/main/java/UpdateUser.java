@@ -1,4 +1,5 @@
 
+import Employee.Employee;
 import java.util.ArrayList;
 
 /*
@@ -11,18 +12,20 @@ import java.util.ArrayList;
  * @author muhai
  */
 public class UpdateUser extends UserManagement {
-    private Staff updateStaff;
-    public UpdateUser(Staff updateStaff){
+    private Employee updateStaff;
+    public UpdateUser(Employee updateStaff){
         this.updateStaff = updateStaff;
     }
     @Override
-    public void execute(ArrayList<Staff> StaffList){
-        for(Staff s : StaffList){
-            if(s.getStaffId().equals(updateStaff.getStaffId())){
-                s.setStaffName(updateStaff.getStaffName());
-                s.setSalary(updateStaff.getSalary());
+    public void execute(ArrayList<Employee> staffList){
+        for(int i = 0; i < staffList.size(); i++){
+            if(staffList.get(i).getEmployeeID().equals(updateStaff.getEmployeeID())){
+                // Swaps old FullTime/PartTime employee with the newly updated object configuration
+                staffList.set(i, updateStaff); 
+                System.out.println("Employee Updated Successfully.");
                 return;
             }
         }
+        System.out.println("Employee to update not found.");
     }
 }
