@@ -203,6 +203,7 @@ public class RegisterView {
                     extraField.getText()
             );
 
+
         } catch (AuthController.AuthException ex) {
             errorLabel.setText("⚠  " + ex.getMessage());
             errorLabel.setVisible(true);
