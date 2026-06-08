@@ -117,7 +117,6 @@ public class AdminPage extends Application {
     }
     public static void showEmployee(ArrayList<Employee> staffList, BorderPane pane) {
         ScrollPane sPane = new ScrollPane();
-        ScrollPane sPane = new ScrollPane();
         VBox showStaff = new VBox(15);
         showStaff.setPadding(new Insets(20));
         // Clear previous items from the center so they don't duplicate on refresh
@@ -129,7 +128,6 @@ public class AdminPage extends Application {
         Label staffName = new Label("Name : " + s.getName());
         // Calls your polymorphic calculateSalary() method automatically!
         Label salary = new Label("Salary : RM " + String.format("%.2f", s.calculateSalary())); 
-        Label statusLab = new Label("Status : " + s.getStatus());
         Label statusLab = new Label("Status : " + s.getStatus());
         staffId.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
         staffName.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
@@ -161,8 +159,7 @@ public class AdminPage extends Application {
             "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);"
         );
         
-        staffCard.getChildren().addAll(staffId, staffName, salary, statusLab,btnBox);
-        staffCard.getChildren().addAll(staffId, staffName, salary, statusLab,btnBox);
+        staffCard.getChildren().addAll(staffId, staffName, salary, btnBox);
         showStaff.getChildren().add(staffCard);
             // Pass the raw ID string directly from the object instead of the Label text
         delete.setOnAction(e -> {
@@ -177,9 +174,6 @@ public class AdminPage extends Application {
         
         update.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px; -fx-background-color: #2196F3; -fx-text-fill: white;");
     }
-    sPane.setContent(showStaff);
-    sPane.setFitToWidth(true);
-    pane.setCenter(sPane);
     sPane.setContent(showStaff);
     sPane.setFitToWidth(true);
     pane.setCenter(sPane);
@@ -250,7 +244,6 @@ public class AdminPage extends Application {
             String name = NameTf.getText();
             double val1 = Double.parseDouble(extraTf1.getText());
             double val2 = Double.parseDouble(extraTf2.getText());
-            String status;
             String status;
             if (rbFullTime.isSelected()) {
                 status = "Full-Time";
