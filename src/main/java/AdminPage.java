@@ -69,6 +69,7 @@ public class AdminPage extends Application {
         
         Scene scene = new Scene(pane, 500, 500);
         stage.setScene(scene);
+        stage.show();
     }
 
     public static void main(String[] args) {
