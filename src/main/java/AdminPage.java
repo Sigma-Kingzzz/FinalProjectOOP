@@ -23,10 +23,13 @@ public class AdminPage extends Application {
     @Override
     public void start(Stage primaryStage) {
         ArrayList<Employee> staffList = new ArrayList<>();
+
         // Ali is full-time: ID, Name, Base Salary, Benefits
         staffList.add(new FullTimeEmployee("D01", "Aiman", 2500.00, 500.00)); 
+
         // Sarah is part-time: ID, Name, Hourly Rate, Hours Worked
         staffList.add(new PartTimeEmployee("D02", "Haikal", 15.00, 80));
+
         BorderPane pane = new BorderPane();
         Button addBtn = new Button("Add Employee");
         pane.setStyle("-fx-background-color: #f5f5f5;");
@@ -102,6 +105,7 @@ public class AdminPage extends Application {
         
         staffCard.getChildren().addAll(staffId, staffName, salary, btnBox);
         showStaff.getChildren().add(staffCard);
+        
             // Pass the raw ID string directly from the object instead of the Label text
         delete.setOnAction(e -> {
             deleteEmployee(s.getEmployeeID(), staffList, pane);

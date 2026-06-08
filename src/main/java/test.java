@@ -12,19 +12,22 @@ public class test {
         //UpdateUser update = new UpdateUser("D01", 1000);
         ArrayList<Staff> staffList = new ArrayList();
         staffList.add(new Staff("Haikal", "D01", 100));
-        staffList.add(new Staff("Akmal", "D02", 100));
-        staffList.add(new Staff("Ammar", "D03", 100));
+        staffList.add(new Staff("Akmal", "D02", 200));
+        staffList.add(new Staff("Ammar", "D03", 1000));
         
         ShowStaff(staffList);
-        
+
         //update.execute(staffList);
-        
-        ShowStaff(staffList);
+        //ShowStaff(staffList);
+
     }
     
     public static void ShowStaff(ArrayList<Staff> staffList){
         for(Staff s : staffList){
             System.out.println(s.getStaffId() + " " + s.getStaffName() + " " + String.format("%.2f", s.getSalary()));
+            CalculateZakat z = new CalculateZakat(s.getSalary()); // Example with the current staff member's salary
+            System.out.println("Zakat Amount for " + s.getStaffName() + ": RM " + String.format("%.2f", z.calculateZakat()));
         }
     }
+
 }
