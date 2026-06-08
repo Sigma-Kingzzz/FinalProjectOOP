@@ -21,12 +21,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
 public class AdminPage extends Application {
-    
+     
+    // Maintain your runtime database list globally within the session lifecycle
+    private static ArrayList<Employee> staffList = new ArrayList<>();
+
     @Override
     public void start(Stage primaryStage) {
         ArrayList<Employee> staffList = new ArrayList<>();
-
         // Ali is full-time: ID, Name, Base Salary, Benefits
         staffList.add(new FullTimeEmployee("D01", "Aiman", 2500.00, "Full-Time",500.00)); 
         // Sarah is part-time: ID, Name, Hourly Rate, Hours Worked
@@ -40,11 +43,24 @@ public class AdminPage extends Application {
     }
 
     /**
-     * @param args the command line arguments
+     * This method transitions the view from Login to the Admin Dashboard options.
+     * Call this method inside your LoginView's "Login" button event handler!
      */
+    public static void showAdminDashboard(Stage stage) {
+        stage.setResizable(true); // Allow dynamic sizing for admin dashboards
+        stage.setTitle("Admin Page");
+        
+        BorderPane pane = new BorderPane();
+        beforeAdmin(pane, staffList); // Loads the dashboard options (PaySlip / Administration)
+        
+        Scene scene = new Scene(pane, 500, 500);
+        stage.setScene(scene);
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
+
     public static void beforeAdmin(BorderPane pane, ArrayList<Employee> staffList){
         
         Image imageAdmin =  new Image("https://img.magnific.com/premium-vector/technology-concept-vector-illustration-featuring-consulting-design-flat-style-elements_1226483-4088.jpg?semt=ais_hybrid&w=740&q=80");
@@ -69,7 +85,6 @@ public class AdminPage extends Application {
         
         HBox btnBox = new HBox(15);
         btnBox.getChildren().addAll(paySlip, admin);
-        
         btnBox.setAlignment(Pos.CENTER);
         
         pane.setCenter(btnBox);
@@ -99,7 +114,6 @@ public class AdminPage extends Application {
             "-fx-text-fill: white;" +
             "-fx-font-weight: bold;" +
             "-fx-padding: 8 15 8 15;"
-        
         );
         addBtn.setOnAction(e -> {
             addEmployee(staffList, pane);
@@ -111,11 +125,11 @@ public class AdminPage extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
     public static void showEmployee(ArrayList<Employee> staffList, BorderPane pane) {
         ScrollPane sPane = new ScrollPane();
         VBox showStaff = new VBox(15);
         showStaff.setPadding(new Insets(20));
-        // Clear previous items from the center so they don't duplicate on refresh
         pane.setCenter(null);
         
         for (Employee s : staffList) {
@@ -154,7 +168,6 @@ public class AdminPage extends Application {
         
         staffCard.getChildren().addAll(staffId, staffName, salary, statusLab,btnBox);
         showStaff.getChildren().add(staffCard);
-        
             // Pass the raw ID string directly from the object instead of the Label text
         delete.setOnAction(e -> {
             deleteEmployee(s.getEmployeeID(), staffList, pane);
@@ -175,89 +188,85 @@ public class AdminPage extends Application {
     
     
     public static void addEmployee(ArrayList<Employee> staffList, BorderPane Bpane) {
-    Label addId = new Label("Enter ID : ");
-    TextField IdTf = new TextField();
-    
-    Label addName = new Label("Enter Name : ");
-    TextField NameTf = new TextField();
+        Label addId = new Label("Enter ID : ");
+        TextField IdTf = new TextField();
+        
+        Label addName = new Label("Enter Name : ");
+        TextField NameTf = new TextField();
 
-    // NEW: Job Type Selector
-    Label typeLabel = new Label("Job Type : ");
-    ToggleGroup typeGroup = new ToggleGroup();
-    RadioButton rbFullTime = new RadioButton("Full-Time");
-    rbFullTime.setToggleGroup(typeGroup);
-    rbFullTime.setSelected(true);
-    RadioButton rbPartTime = new RadioButton("Part-Time");
-    rbPartTime.setToggleGroup(typeGroup);
-    HBox typeBox = new HBox(10, rbFullTime, rbPartTime);
+        Label typeLabel = new Label("Job Type : ");
+        ToggleGroup typeGroup = new ToggleGroup();
+        RadioButton rbFullTime = new RadioButton("Full-Time");
+        rbFullTime.setToggleGroup(typeGroup);
+        rbFullTime.setSelected(true);
+        RadioButton rbPartTime = new RadioButton("Part-Time");
+        rbPartTime.setToggleGroup(typeGroup);
+        HBox typeBox = new HBox(10, rbFullTime, rbPartTime);
 
-    // Dynamic Extra Fields
-    Label extraLabel1 = new Label("Base Salary : ");
-    TextField extraTf1 = new TextField(); // Will hold Base Salary OR Hourly Rate
-    Label extraLabel2 = new Label("Benefits : ");
-    TextField extraTf2 = new TextField(); // Will hold Benefits OR Hours Worked
-    
-    // Toggle field labels dynamically
-    rbFullTime.setOnAction(e -> {
-        extraLabel1.setText("Base Salary : ");
-        extraLabel2.setText("Benefits : ");
-    });
-    rbPartTime.setOnAction(e -> {
-        extraLabel1.setText("Hourly Rate : ");
-        extraLabel2.setText("Hours Worked : ");
-    });
+        Label extraLabel1 = new Label("Base Salary : ");
+        TextField extraTf1 = new TextField(); 
+        Label extraLabel2 = new Label("Benefits : ");
+        TextField extraTf2 = new TextField(); 
+        
+        rbFullTime.setOnAction(e -> {
+            extraLabel1.setText("Base Salary : ");
+            extraLabel2.setText("Benefits : ");
+        });
+        rbPartTime.setOnAction(e -> {
+            extraLabel1.setText("Hourly Rate : ");
+            extraLabel2.setText("Hours Worked : ");
+        });
 
-    GridPane grid = new GridPane();
-    grid.setHgap(10); grid.setVgap(15);
-    
-    grid.add(addId, 0, 0);      grid.add(IdTf, 1, 0);
-    grid.add(addName, 0, 1);    grid.add(NameTf, 1, 1);
-    grid.add(typeLabel, 0, 2);  grid.add(typeBox, 1, 2);
-    grid.add(extraLabel1, 0, 3); grid.add(extraTf1, 1, 3);
-    grid.add(extraLabel2, 0, 4); grid.add(extraTf2, 1, 4);
-    
-    Button submit = new Button("Submit");
-    Label title = new Label("Add New Staff");
-    title.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 22px; -fx-font-weight: bold;");
-    submit.setStyle("-fx-font-family: 'Segoe UI'; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 8 20 8 20;");
-           
-    VBox root = new VBox(20);
-    root.setPadding(new Insets(20));
-    root.getChildren().addAll(title, grid, submit);
-    
-    Scene scene = new Scene(root);
-    Stage stage = new Stage();
-    stage.setTitle("Add Staff");
-    stage.setScene(scene);
-    stage.show();
-    
-    submit.setOnAction(e -> {
-        try {
-            Employee newEmp;
-            String id = IdTf.getText();
-            String name = NameTf.getText();
-            double val1 = Double.parseDouble(extraTf1.getText());
-            double val2 = Double.parseDouble(extraTf2.getText());
-            String status;
-            if (rbFullTime.isSelected()) {
-                status = "Full-Time";
-                newEmp = new FullTimeEmployee(id, name, val1, status,val2);
-            } else {
-                status = "Part-Time";
-                newEmp = new PartTimeEmployee(id, name, val1, status,(int) val2);
+        GridPane grid = new GridPane();
+        grid.setHgap(10); grid.setVgap(15);
+        
+        grid.add(addId, 0, 0);      grid.add(IdTf, 1, 0);
+        grid.add(addName, 0, 1);    grid.add(NameTf, 1, 1);
+        grid.add(typeLabel, 0, 2);  grid.add(typeBox, 1, 2);
+        grid.add(extraLabel1, 0, 3); grid.add(extraTf1, 1, 3);
+        grid.add(extraLabel2, 0, 4); grid.add(extraTf2, 1, 4);
+        
+        Button submit = new Button("Submit");
+        Label title = new Label("Add New Staff");
+        title.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 22px; -fx-font-weight: bold;");
+        submit.setStyle("-fx-font-family: 'Segoe UI'; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 8 20 8 20;");
+               
+        VBox root = new VBox(20);
+        root.setPadding(new Insets(20));
+        root.getChildren().addAll(title, grid, submit);
+        
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setTitle("Add Staff");
+        stage.setScene(scene);
+        stage.show();
+        
+        submit.setOnAction(e -> {
+            try {
+                Employee newEmp;
+                String id = IdTf.getText();
+                String name = NameTf.getText();
+                double val1 = Double.parseDouble(extraTf1.getText());
+                double val2 = Double.parseDouble(extraTf2.getText());
+                String status;
+                if (rbFullTime.isSelected()) {
+                    status = "Full-Time";
+                    newEmp = new FullTimeEmployee(id, name, val1, status, val2);
+                } else {
+                    status = "Part-Time";
+                    newEmp = new PartTimeEmployee(id, name, val1, status, (int) val2);
+                }
+
+                AddUser add = new AddUser(newEmp);
+                add.execute(staffList);
+                
+                showEmployee(staffList, Bpane);
+                stage.close();
+            } catch (Exception ex) {
+                System.out.println("Validation Error: Check input values.");
             }
-
-            // Call the team's handler (make sure AddUser class accepts 'Employee' now instead of 'Staff')
-            AddUser add = new AddUser(newEmp);
-            add.execute(staffList);
-            
-            showEmployee(staffList, Bpane);
-            stage.close();
-        } catch (Exception ex) {
-            System.out.println("Validation Error: Check input values.");
-        }
-    });
-}
+        });
+    }
     
     public static void deleteEmployee(String ID, ArrayList<Employee> StaffList, BorderPane pane){
         DeleteUser del = new DeleteUser(ID);
@@ -266,88 +275,85 @@ public class AdminPage extends Application {
     }
     
     public static void updateEmployee(String ID, ArrayList<Employee> staffList, BorderPane pane) {
-    // Find the current employee object from the list
-    Employee target = null;
-    for (Employee e : staffList) {
-        if (e.getEmployeeID().equals(ID)) {
-            target = e;
-            break;
-        }
-    }
-    if (target == null) return;
-
-    Label IdLabel = new Label("ID : ");
-    TextField IdTf = new TextField(ID);
-    IdTf.setEditable(false);
-    
-    Label updateName = new Label("Enter Name : ");
-    TextField NameTf = new TextField(target.getName());
-    
-    Label extraLabel1 = new Label();
-    TextField extraTf1 = new TextField();
-    Label extraLabel2 = new Label();
-    TextField extraTf2 = new TextField();
-
-    // Set layout values based on what type of employee they actually are
-    if (target instanceof FullTimeEmployee) {
-        FullTimeEmployee ft = (FullTimeEmployee) target;
-        extraLabel1.setText("Enter Base Salary : ");
-        extraTf1.setText(String.valueOf(ft.getBasicSalary()));
-        extraLabel2.setText("Enter Benefits : ");
-        extraTf2.setText(String.valueOf(ft.getBenefits()));
-    } else if (target instanceof PartTimeEmployee) {
-        PartTimeEmployee pt = (PartTimeEmployee) target;
-        extraLabel1.setText("Enter Hourly Rate : ");
-        extraTf1.setText(String.valueOf(pt.getHourlyRate()));
-        extraLabel2.setText("Enter Hours Worked : ");
-        extraTf2.setText(String.valueOf(pt.getHoursWorked()));
-    }
-
-    GridPane grid = new GridPane();
-    grid.setHgap(10); grid.setVgap(15);
-    grid.add(IdLabel, 0, 0);     grid.add(IdTf, 1, 0);
-    grid.add(updateName, 0, 1); grid.add(NameTf, 1, 1);
-    grid.add(extraLabel1, 0, 2); grid.add(extraTf1, 1, 2);
-    grid.add(extraLabel2, 0, 3); grid.add(extraTf2, 1, 3);
-    
-    Button updBtn = new Button("Update");
-    Label title = new Label("Update Staff");
-    title.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 22px; -fx-font-weight: bold;");
-    updBtn.setStyle("-fx-font-family: 'Segoe UI'; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 8 20 8 20;");
-            
-    VBox root = new VBox(20);
-    root.setPadding(new Insets(20));
-    root.getChildren().addAll(title, grid, updBtn);
-    
-    Scene scene = new Scene(root);
-    Stage stage = new Stage();
-    stage.setTitle("Update Staff");
-    stage.setScene(scene);
-    stage.show();
-    
-    final Employee finalTarget = target;
-    updBtn.setOnAction(e -> {
-        try {
-            Employee updatedEmp;
-            String name = NameTf.getText();
-            double val1 = Double.parseDouble(extraTf1.getText());
-            double val2 = Double.parseDouble(extraTf2.getText());
-
-            if (finalTarget instanceof FullTimeEmployee) {
-                updatedEmp = new FullTimeEmployee(ID, name, val1, "Full-Time",val2);
-            } else {
-                updatedEmp = new PartTimeEmployee(ID, name, val1, "Part-Time",(int) val2);
+        Employee target = null;
+        for (Employee e : staffList) {
+            if (e.getEmployeeID().equals(ID)) {
+                target = e;
+                break;
             }
-
-            // Execute the team's Update mechanism
-            UpdateUser update = new UpdateUser(updatedEmp);
-            update.execute(staffList);
-            
-            showEmployee(staffList, pane);
-            stage.close();
-        } catch (Exception ex) {
-            System.out.println("Update failed: Check numbers format.");
         }
-    });
-}
+        if (target == null) return;
+
+        Label IdLabel = new Label("ID : ");
+        TextField IdTf = new TextField(ID);
+        IdTf.setEditable(false);
+        
+        Label updateName = new Label("Enter Name : ");
+        TextField NameTf = new TextField(target.getName());
+        
+        Label extraLabel1 = new Label();
+        TextField extraTf1 = new TextField();
+        Label extraLabel2 = new Label();
+        TextField extraTf2 = new TextField();
+
+        if (target instanceof FullTimeEmployee) {
+            FullTimeEmployee ft = (FullTimeEmployee) target;
+            extraLabel1.setText("Enter Base Salary : ");
+            extraTf1.setText(String.valueOf(ft.getBasicSalary()));
+            extraLabel2.setText("Enter Benefits : ");
+            extraTf2.setText(String.valueOf(ft.getBenefits()));
+        } else if (target instanceof PartTimeEmployee) {
+            PartTimeEmployee pt = (PartTimeEmployee) target;
+            extraLabel1.setText("Enter Hourly Rate : ");
+            extraTf1.setText(String.valueOf(pt.getHourlyRate()));
+            extraLabel2.setText("Enter Hours Worked : ");
+            extraTf2.setText(String.valueOf(pt.getHoursWorked()));
+        }
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10); grid.setVgap(15);
+        grid.add(IdLabel, 0, 0);     grid.add(IdTf, 1, 0);
+        grid.add(updateName, 0, 1); grid.add(NameTf, 1, 1);
+        grid.add(extraLabel1, 0, 2); grid.add(extraTf1, 1, 2);
+        grid.add(extraLabel2, 0, 3); grid.add(extraTf2, 1, 3);
+        
+        Button updBtn = new Button("Update");
+        Label title = new Label("Update Staff");
+        title.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 22px; -fx-font-weight: bold;");
+        updBtn.setStyle("-fx-font-family: 'Segoe UI'; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 8 20 8 20;");
+                
+        VBox root = new VBox(20);
+        root.setPadding(new Insets(20));
+        root.getChildren().addAll(title, grid, updBtn);
+        
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setTitle("Update Staff");
+        stage.setScene(scene);
+        stage.show();
+        
+        final Employee finalTarget = target;
+        updBtn.setOnAction(e -> {
+            try {
+                Employee updatedEmp;
+                String name = NameTf.getText();
+                double val1 = Double.parseDouble(extraTf1.getText());
+                double val2 = Double.parseDouble(extraTf2.getText());
+
+                if (finalTarget instanceof FullTimeEmployee) {
+                    updatedEmp = new FullTimeEmployee(ID, name, val1, "Full-Time", val2);
+                } else {
+                    updatedEmp = new PartTimeEmployee(ID, name, val1, "Part-Time", (int) val2);
+                }
+
+                UpdateUser update = new UpdateUser(updatedEmp);
+                update.execute(staffList);
+                
+                showEmployee(staffList, pane);
+                stage.close();
+            } catch (Exception ex) {
+                System.out.println("Update failed: Check numbers format.");
+            }
+        });
+    }
 }
