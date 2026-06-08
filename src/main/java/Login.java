@@ -7,19 +7,16 @@ public class Login extends Application {
     public static Stage primaryStage;
 
     @Override
-    public void start(Stage stage) {
-        primaryStage = stage;
-        stage.setTitle("Employee Payroll System");
-        stage.setResizable(false);
+    public void start(Stage LoginStage) {
+        primaryStage = LoginStage;
+        LoginStage.setTitle("Employee Payroll System");
+        LoginStage.setResizable(false);
 
-        LoginView loginView = new LoginView(stage);
+        LoginView loginView = new LoginView(LoginStage);
         Scene scene = new Scene(loginView.getRoot(), 900, 600);
-        scene.getStylesheets().add(
-            getClass().getResource("style.css").toExternalForm()
-        );
 
-        stage.setScene(scene);
-        stage.show();
+        LoginStage.setScene(scene);
+        LoginStage.show();
     }
 
     public static void main(String[] args) {
