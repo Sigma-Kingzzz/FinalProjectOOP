@@ -26,11 +26,63 @@ public class AdminPage extends Application {
     @Override
     public void start(Stage primaryStage) {
         ArrayList<Employee> staffList = new ArrayList<>();
-
         // Ali is full-time: ID, Name, Base Salary, Benefits
-        staffList.add(new FullTimeEmployee("D01", "Aiman", 2500.00, 500.00)); 
+        staffList.add(new FullTimeEmployee("D01", "Aiman", 2500.00, "Full-Time",500.00)); 
         // Sarah is part-time: ID, Name, Hourly Rate, Hours Worked
-        staffList.add(new PartTimeEmployee("D02", "Haikal", 15.00, 80));
+        staffList.add(new PartTimeEmployee("D02", "Haikal", 15.00, "Part-Time",80));
+        BorderPane pane = new BorderPane();
+        beforeAdmin(pane, staffList);
+        Scene scene = new Scene(pane, 500, 500);
+        primaryStage.setTitle("Admin Page");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    public static void beforeAdmin(BorderPane pane, ArrayList<Employee> staffList){
+        
+        Image imageAdmin =  new Image("file:"+"C:\\Users\\muhai\\OneDrive\\Pictures\\administrator.png");
+        Image imagePSlip = new Image("file:"+"C:\\Users\\muhai\\OneDrive\\Pictures\\payslip.png");
+        
+        ImageView ivPSlip = new ImageView(imagePSlip);
+        ImageView ivAdmin = new ImageView(imageAdmin);
+        
+        ivPSlip.setFitHeight(100);
+        ivPSlip.setFitWidth(100);
+        ivAdmin.setFitHeight(100);
+        ivAdmin.setFitWidth(100);
+        
+        Button paySlip = new Button("PaySlip", ivPSlip);
+        Button admin = new Button("Administration", ivAdmin);
+        
+        paySlip.setContentDisplay(ContentDisplay.TOP);
+        admin.setContentDisplay(ContentDisplay.TOP);
+        
+        paySlip.setGraphicTextGap(10);
+        admin.setGraphicTextGap(10);
+        
+        HBox btnBox = new HBox(15);
+        btnBox.getChildren().addAll(paySlip, admin);
+        
+        btnBox.setAlignment(Pos.CENTER);
+        
+        pane.setCenter(btnBox);
+        
+        admin.setOnAction(e -> {
+            enterAdmin(staffList);
+        });
+
+        paySlip.setOnAction(e -> {
+            enterPaySlip(staffList);
+        });
+    }
+    
+    public static void enterAdmin(ArrayList<Employee> staffList){
         BorderPane pane = new BorderPane();
         Button addBtn = new Button("Add Employee");
         pane.setStyle("-fx-background-color: #f5f5f5;");
@@ -53,7 +105,7 @@ public class AdminPage extends Application {
         
         Scene scene = new Scene(pane, 500, 500);
         Stage stage = new Stage();
-        stage.setTitle("Administarion Page");
+        stage.setTitle("Administration Page");
         stage.setScene(scene);
         stage.show();
     }
@@ -100,7 +152,6 @@ public class AdminPage extends Application {
         
         staffCard.getChildren().addAll(staffId, staffName, salary, statusLab,btnBox);
         showStaff.getChildren().add(staffCard);
-        
             // Pass the raw ID string directly from the object instead of the Label text
         delete.setOnAction(e -> {
             deleteEmployee(s.getEmployeeID(), staffList, pane);
@@ -296,4 +347,16 @@ public class AdminPage extends Application {
         }
     });
 }
+    public static void enterPaySlip(ArrayList<Employee> staffList){ //This method can be called from the PaySlip button in the main admin page
+        BorderPane pane2 = new BorderPane();
+        Label title2 = new Label("PaySlip Page");
+        title2.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 22px; -fx-font-weight: bold;");
+        pane2.setTop(title2);
+        BorderPane.setAlignment(title2, Pos.CENTER);
+        Scene scene2 = new Scene(pane2, 500, 500);
+        Stage stage2 = new Stage();
+        stage2.setScene(scene2);
+        stage2.setTitle("PaySlip Page");
+        stage2.show();
+    }
 }
