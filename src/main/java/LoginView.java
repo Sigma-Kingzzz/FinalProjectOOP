@@ -154,6 +154,7 @@ public class LoginView {
                 demoBox
         );
 
+        // Visual fade-in effect when panel updates
         FadeTransition ft = new FadeTransition(Duration.millis(600), panel);
         ft.setFromValue(0);
         ft.setToValue(1);
@@ -168,15 +169,22 @@ public class LoginView {
         errorLabel.setVisible(false);
 
         try {
+            // Validate credentials through the Authentication pipeline
             User user = auth.login(
                 emailField.getText().trim(),
                 passwordField.getText()
             );
 
+            // ==================== FIXED HERE ====================
+            // Trigger the stage transition to view the primary Admin Navigation Dashboard
+            AdminPage.showAdminDashboard(this.stage);
+            // ====================================================
+
         } catch (AuthController.AuthException ex) {
             errorLabel.setText("⚠  " + ex.getMessage());
             errorLabel.setVisible(true);
 
+            // Shake error visual feedback animation
             TranslateTransition shake =
                 new TranslateTransition(Duration.millis(60), errorLabel);
             shake.setByX(10);
@@ -184,6 +192,7 @@ public class LoginView {
             shake.setAutoReverse(true);
             shake.play();
         } finally {
+            // Note: We only reset UI states if authentication didn't pass or exit smoothly
             loginBtn.setText("Sign In");
             loginBtn.setDisable(false);
         }
