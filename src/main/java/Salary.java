@@ -122,7 +122,7 @@ public class Salary {
         pane.setCenter(sPane);
 
         // Title at top
-        Label title = new Label("Salary Breakdown");
+        Label title = new Label("Pay Slip");
         title.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 22px; -fx-font-weight: bold;");
         HBox titleBox = new HBox(title);
         titleBox.setPadding(new Insets(20));
