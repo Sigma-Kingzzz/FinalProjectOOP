@@ -51,8 +51,8 @@ public class AdminPage extends Application {
     }
     public static void beforeAdmin(BorderPane pane, ArrayList<Employee> staffList){
         
-        Image imageAdmin =  new Image("file:"+"C:\\Users\\muhai\\OneDrive\\Pictures\\administrator.png");
-        Image imagePSlip = new Image("file:"+"C:\\Users\\muhai\\OneDrive\\Pictures\\payslip.png");
+        Image imageAdmin =  new Image("https://img.magnific.com/premium-vector/technology-concept-vector-illustration-featuring-consulting-design-flat-style-elements_1226483-4088.jpg?semt=ais_hybrid&w=740&q=80");
+        Image imagePSlip = new Image("https://t4.ftcdn.net/jpg/17/02/94/47/360_F_1702944783_SoIiHjQ9vyGM3tr4YQFi0iCNzHf8sYJg.jpg");
         
         ImageView ivPSlip = new ImageView(imagePSlip);
         ImageView ivAdmin = new ImageView(imageAdmin);
