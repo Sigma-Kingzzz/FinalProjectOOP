@@ -15,10 +15,11 @@ public abstract class Employee {
     private String status;
     
     //Constructor
-    public Employee(String employeeID, String name, double basicSalary){
+    public Employee(String employeeID, String name, double basicSalary,String status){
         this.employeeID=employeeID;
         this.name=name;
         this.basicSalary=basicSalary;
+        this.status = status;
     }
     
     //Getters and Setters 
@@ -41,6 +42,10 @@ public abstract class Employee {
     }
     public void setbasicSalary(double basicSalary){
         this.basicSalary=basicSalary;
+    }
+    
+    public String getStatus(){
+        return status;
     }
     public abstract double calculateSalary();
 }

@@ -13,9 +13,9 @@ public class PartTimeEmployee extends Employee {
     private int hoursWorked;
 
     // Constructor
-    public PartTimeEmployee(String employeeID, String name, double hourlyRate, int hoursWorked) {
+    public PartTimeEmployee(String employeeID, String name, double hourlyRate, String status,int hoursWorked) {
         // Pass 0 for basicSalary since part-timers are paid hourly
-        super(employeeID, name, 0.0); 
+        super(employeeID, name, 0.0, status); 
         this.hourlyRate = hourlyRate;
         this.hoursWorked = hoursWorked;
     }
