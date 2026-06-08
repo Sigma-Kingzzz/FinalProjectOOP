@@ -2,25 +2,20 @@ import Employee.Employee;
 import Employee.FullTimeEmployee;
 import Employee.PartTimeEmployee;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-import javafx.scene.layout.BorderPane;
-import java.util.ArrayList;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.control.TextField;
-import javafx.geometry.Pos;
 import javafx.geometry.Insets;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.GridPane;
-import javafx.scene.control.ScrollPane;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+import java.util.ArrayList;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class AdminPage extends Application {
      
@@ -29,7 +24,7 @@ public class AdminPage extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // Initialize your dummy data once
+        // Initialize your dummy data once using the correct 5-argument constructors
         if (staffList.isEmpty()) {
             staffList.add(new FullTimeEmployee("D01", "Aiman", 2500.00, "Full-Time", 500.00)); 
             staffList.add(new PartTimeEmployee("D02", "Haikal", 15.00, "Part-Time", 80));
@@ -39,8 +34,7 @@ public class AdminPage extends Application {
         primaryStage.setTitle("Employee Payroll System - Login");
         primaryStage.setResizable(false);
 
-        // 2. Load Login layout (Assuming LoginView accepts Stage or handles logic internally)
-        // Note: You must wire your LoginView submit button to call AdminPage.showAdminDashboard(primaryStage);
+        // 2. Load Login layout and pass the stage references
         LoginView loginView = new LoginView(primaryStage); 
         
         Scene loginScene = new Scene(loginView.getRoot(), 900, 600);
@@ -57,68 +51,123 @@ public class AdminPage extends Application {
     }
 
     /**
-     * This method transitions the view from Login to the Admin Dashboard options.
-     * Call this method inside your LoginView's "Login" button event handler!
+     * This method transitions the view from Login to the main Dashboard choice pane.
+     * It is triggered automatically inside LoginView upon a successful sign-in.
      */
-    public static void showAdminDashboard(Stage stage) {
-        stage.setResizable(true); // Allow dynamic sizing for admin dashboards
-        stage.setTitle("Admin Page");
+    public static void showAdminDashboard(Stage stage, Employee loggedInUser) {
+        stage.setResizable(true); // Allow dynamic sizing for dashboards
+        stage.setTitle("PayrollPro - Dashboard");
         
         BorderPane pane = new BorderPane();
-        beforeAdmin(pane, staffList); // Loads the dashboard options (PaySlip / Administration)
+        beforeAdmin(pane, staffList, loggedInUser); // Loads selection buttons (PaySlip / Administration)
         
         Scene scene = new Scene(pane, 500, 500);
         stage.setScene(scene);
         stage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    public static void beforeAdmin(BorderPane pane, ArrayList<Employee> staffList){
-        Image imageAdmin = new Image("file:"+"C:\\Users\\muhai\\OneDrive\\Pictures\\administrator.png");
-        Image imagePSlip = new Image("file:"+"C:\\Users\\muhai\\OneDrive\\Pictures\\payslip.png");
-        
-        ImageView ivPSlip = new ImageView(imagePSlip);
-        ImageView ivAdmin = new ImageView(imageAdmin);
-        
-        ivPSlip.setFitHeight(100);
-        ivPSlip.setFitWidth(100);
-        ivAdmin.setFitHeight(100);
-        ivAdmin.setFitWidth(100);
-        
-        Button paySlip = new Button("PaySlip", ivPSlip);
-        Button admin = new Button("Administration", ivAdmin);
-        
-        paySlip.setContentDisplay(ContentDisplay.TOP);
-        admin.setContentDisplay(ContentDisplay.TOP);
-        
-        paySlip.setGraphicTextGap(10);
-        admin.setGraphicTextGap(10);
-        
-        HBox btnBox = new HBox(15);
-        btnBox.getChildren().addAll(paySlip, admin);
-        btnBox.setAlignment(Pos.CENTER);
-        
-        pane.setCenter(btnBox);
-        
-        admin.setOnAction(e -> {
-            enterAdmin(staffList);
-        });
+    public static void beforeAdmin(BorderPane pane, ArrayList<Employee> staffList, Employee loggedInUser){
+    pane.setStyle("-fx-background-color: #f5f5f5;");
+    
+    Image imageAdmin = new Image("https://img.magnific.com/premium-vector/technology-concept-vector-illustration-featuring-consulting-design-flat-style-elements_1226483-4088.jpg?semt=ais_hybrid&w=740&q=80");
+    Image imagePSlip = new Image("https://t4.ftcdn.net/jpg/17/02/94/47/360_F_1702944783_SoIiHjQ9vyGM3tr4YQFi0iCNzHf8sYJg.jpg");
+    
+    ImageView ivPSlip = new ImageView(imagePSlip);
+    ImageView ivAdmin = new ImageView(imageAdmin);
+    
+    ivPSlip.setFitHeight(100);
+    ivPSlip.setFitWidth(100);
+    ivAdmin.setFitHeight(100);
+    ivAdmin.setFitWidth(100);
+    
+    Button paySlip = new Button("PaySlip", ivPSlip);
+    Button admin = new Button("Administration", ivAdmin);
+    
+    paySlip.setContentDisplay(ContentDisplay.TOP);
+    admin.setContentDisplay(ContentDisplay.TOP);
+    
+    paySlip.setGraphicTextGap(10);
+    admin.setGraphicTextGap(10);
+    
+    HBox btnBox = new HBox(25);
+    btnBox.getChildren().addAll(paySlip, admin);
+    btnBox.setAlignment(Pos.CENTER);
+    
+    pane.setCenter(btnBox);
+    
+    admin.setOnAction(e -> {
+        enterAdmin(staffList);
+    });
 
         paySlip.setOnAction(e -> {
-            Salary sal = new Salary(staffList);
-            sal.getSalaryBreakdown();
+        Salary sal = new Salary(loggedInUser);
+        sal.getSalaryBreakdown(); // Runs your original logic
+        
         });
     }
     
-    public static void enterAdmin(ArrayList<Employee> staffList){
+public static void savePayslipToTxt(Employee emp) {
+    // Generates a unique filename using the employee's name
+    String filename = emp.getName() + "_Payslip.txt";
+    
+    // try-with-resources handles opening and closing the file stream safely
+    try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+        writer.println("=========================================");
+        writer.println("           PAYROLLPRO PAYSLIP            ");
+        writer.println("=========================================");
+        writer.println("Employee ID   : " + emp.getEmployeeID());
+        writer.println("Name          : " + emp.getName());
+        writer.println("Job Status    : " + emp.getStatus());
+        writer.println("-----------------------------------------");
+        
+        // Check exact instances to print specialized attributes polymorphically
+        if (emp instanceof FullTimeEmployee) {
+            FullTimeEmployee ft = (FullTimeEmployee) emp;
+            writer.printf("Base Salary   : RM %.2f\n", ft.getBasicSalary());
+            writer.printf("Benefits      : RM %.2f\n", ft.getBenefits());
+        } else if (emp instanceof PartTimeEmployee) {
+            PartTimeEmployee pt = (PartTimeEmployee) emp;
+            writer.printf("Hourly Rate   : RM %.2f\n", pt.getHourlyRate());
+            writer.println("Hours Worked  : " + pt.getHoursWorked());
+        }
+        
+        writer.println("-----------------------------------------");
+        writer.printf("TOTAL NET PAY : RM %.2f\n", emp.calculateSalary());
+        writer.println("=========================================");
+        
+        // Attaches a real execution timestamp
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        writer.println("Printed on    : " + dtf.format(LocalDateTime.now()));
+        writer.println("=========================================");
+        
+        // Success Popup
+        Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+        successAlert.setTitle("Success");
+        successAlert.setHeaderText(null);
+        successAlert.setContentText("Payslip exported successfully!\nSaved as: " + filename);
+        successAlert.showAndWait();
+        
+    } catch (IOException ex) {
+        // Error Popup fallback if something locks the folder
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+        errorAlert.setTitle("Error");
+        errorAlert.setHeaderText("File Error");
+        errorAlert.setContentText("Failed to write the text file: " + ex.getMessage());
+        errorAlert.showAndWait();
+    }
+}
+    // Public getter so LoginView can search through registered employees during auth
+    public static ArrayList<Employee> getStaffList() {
+        return staffList;
+    }
+
+    public static void enterAdmin(ArrayList<Employee> staffList) {
         BorderPane pane = new BorderPane();
         Button addBtn = new Button("Add Employee");
         pane.setStyle("-fx-background-color: #f5f5f5;");
         pane.setBottom(addBtn);
         BorderPane.setMargin(addBtn, new Insets(20));
+        
         showEmployee(staffList, pane);
         
         addBtn.setStyle(
@@ -133,9 +182,9 @@ public class AdminPage extends Application {
             addEmployee(staffList, pane);
         });
         
-        Scene scene = new Scene(pane, 500, 500);
+        Scene scene = new Scene(pane, 550, 550);
         Stage stage = new Stage();
-        stage.setTitle("Administration Page");
+        stage.setTitle("Administration Subsystem");
         stage.setScene(scene);
         stage.show();
     }
@@ -151,6 +200,7 @@ public class AdminPage extends Application {
             Label staffName = new Label("Name : " + s.getName());
             Label salary = new Label("Salary : RM " + String.format("%.2f", s.calculateSalary())); 
             Label statusLab = new Label("Status : " + s.getStatus());
+            
             staffId.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
             staffName.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
             salary.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
@@ -178,6 +228,7 @@ public class AdminPage extends Application {
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);"
             );
             
+            // Fixed duplicate addition bug here
             staffCard.getChildren().addAll(staffId, staffName, salary, statusLab, btnBox);
             showStaff.getChildren().add(staffCard);
 
@@ -258,6 +309,7 @@ public class AdminPage extends Application {
                 double val1 = Double.parseDouble(extraTf1.getText());
                 double val2 = Double.parseDouble(extraTf2.getText());
                 String status;
+                
                 if (rbFullTime.isSelected()) {
                     status = "Full-Time";
                     newEmp = new FullTimeEmployee(id, name, val1, status, val2);
@@ -364,5 +416,9 @@ public class AdminPage extends Application {
                 System.out.println("Update failed: Check numbers format.");
             }
         });
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }
