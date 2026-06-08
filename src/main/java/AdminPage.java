@@ -15,9 +15,13 @@ import javafx.scene.control.TextField;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,6 +31,7 @@ public class AdminPage extends Application {
     public void start(Stage primaryStage) {
         ArrayList<Employee> staffList = new ArrayList<>();
         // Ali is full-time: ID, Name, Base Salary, Benefits
+        staffList.add(new FullTimeEmployee("D01", "Aiman", 2500.00, "Full-Time",500.00)); 
         staffList.add(new FullTimeEmployee("D01", "Aiman", 2500.00, "Full-Time",500.00)); 
         // Sarah is part-time: ID, Name, Hourly Rate, Hours Worked
         staffList.add(new PartTimeEmployee("D02", "Haikal", 15.00, "Part-Time",80));
@@ -87,6 +92,7 @@ public class AdminPage extends Application {
         Button addBtn = new Button("Add Employee");
         pane.setStyle("-fx-background-color: #f5f5f5;");
         pane.setBottom(addBtn);
+        pane.setBottom(addBtn);
         BorderPane.setMargin(addBtn, new Insets(20));
         showEmployee(staffList, pane);
         
@@ -111,6 +117,7 @@ public class AdminPage extends Application {
     }
     public static void showEmployee(ArrayList<Employee> staffList, BorderPane pane) {
         ScrollPane sPane = new ScrollPane();
+        ScrollPane sPane = new ScrollPane();
         VBox showStaff = new VBox(15);
         showStaff.setPadding(new Insets(20));
         // Clear previous items from the center so they don't duplicate on refresh
@@ -123,13 +130,17 @@ public class AdminPage extends Application {
         // Calls your polymorphic calculateSalary() method automatically!
         Label salary = new Label("Salary : RM " + String.format("%.2f", s.calculateSalary())); 
         Label statusLab = new Label("Status : " + s.getStatus());
+        Label statusLab = new Label("Status : " + s.getStatus());
         staffId.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
         staffName.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
         salary.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
         statusLab.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
+        statusLab.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
         
         staffId.setPrefWidth(60);
         staffName.setPrefWidth(120);
+        salary.setPrefWidth(140);
+        statusLab.setPrefWidth(130);
         salary.setPrefWidth(140);
         statusLab.setPrefWidth(130);
         
@@ -151,6 +162,7 @@ public class AdminPage extends Application {
         );
         
         staffCard.getChildren().addAll(staffId, staffName, salary, statusLab,btnBox);
+        staffCard.getChildren().addAll(staffId, staffName, salary, statusLab,btnBox);
         showStaff.getChildren().add(staffCard);
             // Pass the raw ID string directly from the object instead of the Label text
         delete.setOnAction(e -> {
@@ -165,6 +177,9 @@ public class AdminPage extends Application {
         
         update.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px; -fx-background-color: #2196F3; -fx-text-fill: white;");
     }
+    sPane.setContent(showStaff);
+    sPane.setFitToWidth(true);
+    pane.setCenter(sPane);
     sPane.setContent(showStaff);
     sPane.setFitToWidth(true);
     pane.setCenter(sPane);
@@ -236,10 +251,15 @@ public class AdminPage extends Application {
             double val1 = Double.parseDouble(extraTf1.getText());
             double val2 = Double.parseDouble(extraTf2.getText());
             String status;
+            String status;
             if (rbFullTime.isSelected()) {
                 status = "Full-Time";
                 newEmp = new FullTimeEmployee(id, name, val1, status,val2);
+                status = "Full-Time";
+                newEmp = new FullTimeEmployee(id, name, val1, status,val2);
             } else {
+                status = "Part-Time";
+                newEmp = new PartTimeEmployee(id, name, val1, status,(int) val2);
                 status = "Part-Time";
                 newEmp = new PartTimeEmployee(id, name, val1, status,(int) val2);
             }
@@ -332,7 +352,9 @@ public class AdminPage extends Application {
 
             if (finalTarget instanceof FullTimeEmployee) {
                 updatedEmp = new FullTimeEmployee(ID, name, val1, "Full-Time",val2);
+                updatedEmp = new FullTimeEmployee(ID, name, val1, "Full-Time",val2);
             } else {
+                updatedEmp = new PartTimeEmployee(ID, name, val1, "Part-Time",(int) val2);
                 updatedEmp = new PartTimeEmployee(ID, name, val1, "Part-Time",(int) val2);
             }
 
