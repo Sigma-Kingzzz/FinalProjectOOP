@@ -1,20 +1,28 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
-package login;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-/**
- *
- * @author User
- */
-public class Login {
+public class Login extends Application {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public static Stage primaryStage;
+
+    @Override
+    public void start(Stage stage) {
+        primaryStage = stage;
+        stage.setTitle("Employee Payroll System");
+        stage.setResizable(false);
+
+        LoginView loginView = new LoginView(stage);
+        Scene scene = new Scene(loginView.getRoot(), 900, 600);
+        scene.getStylesheets().add(
+            getClass().getResource("style.css").toExternalForm()
+        );
+
+        stage.setScene(scene);
+        stage.show();
     }
-    
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
