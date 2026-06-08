@@ -2,6 +2,9 @@ import Employee.Employee;
 import Employee.FullTimeEmployee;
 import Employee.PartTimeEmployee;
 import java.util.ArrayList;
+
+import javax.smartcardio.Card;
+
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,6 +15,10 @@ import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.File;
+import javafx.scene.control.TextField;
 
 public class Salary {
 
@@ -45,13 +52,23 @@ public class Salary {
 
     // getSalaryBreakdown() - opens a JavaFX window showing all salary details
     public void getSalaryBreakdown() 
-    {
+    {   
+
         BorderPane pane = new BorderPane();
         pane.setStyle("-fx-background-color: #f5f5f5;");
 
         ScrollPane sPane = new ScrollPane();
         VBox allCards = new VBox(15);
         allCards.setPadding(new Insets(20));
+
+        pane.setCenter(sPane);
+        // Title at top
+        Label title = new Label("Pay Slip");
+        title.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 22px; -fx-font-weight: bold;");
+        HBox titleBox = new HBox(title);
+        titleBox.setPadding(new Insets(20));
+        titleBox.setAlignment(Pos.CENTER_LEFT);
+        pane.setTop(titleBox);
 
         for (int i = 0; i < employeeList.size(); i++)
         {
@@ -117,17 +134,54 @@ public class Salary {
             allCards.getChildren().add(card);
         }
 
+        VBox buttonBox = new VBox();
+        buttonBox.setAlignment(Pos.CENTER);
+        Button generatePaySlipBtn = new Button("Generate Pay Slip");
+        generatePaySlipBtn.setStyle(
+            "-fx-background-color: #4CAF50;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-family: 'Segoe UI';" +
+            "-fx-font-size: 14px;" +
+            "-fx-padding: 8 16;" +
+            "-fx-background-radius: 5;"
+        );
+
+        buttonBox.getChildren().add(generatePaySlipBtn);
+
+         generatePaySlipBtn.setOnAction(g -> {
+            try {
+                FileWriter fw = new FileWriter("pay_slips.txt");
+                for (Employee emp : employeeList) {
+                    fw.write("Employee ID: " + emp.getEmployeeID() + "\n");
+                    fw.write("Name: " + emp.getName() + "\n");
+                    fw.write("Status: " + emp.getStatus() + "\n");
+                    if (emp instanceof FullTimeEmployee) {
+                        FullTimeEmployee ft = (FullTimeEmployee) emp;
+                        fw.write("Basic Salary: RM " + String.format("%.2f", ft.getBasicSalary()) + "\n");
+                        fw.write("Benefits: RM " + String.format("%.2f", ft.getBenefits()) + "\n");
+                    } else if (emp instanceof PartTimeEmployee) {
+                        PartTimeEmployee pt = (PartTimeEmployee) emp;
+                        fw.write("Hourly Rate: RM " + String.format("%.2f", pt.getHourlyRate()) + "\n");
+                        fw.write("Hours Worked: " + pt.getHoursWorked() + " hrs\n");
+                    }
+                    fw.write("Total Salary: RM " + String.format("%.2f", calculateSalary(emp)) + "\n");
+                    fw.write(checkSalary(emp) ? "Minimum Wage: MEETS (>= RM 1500.00)\n" : "Minimum Wage: BELOW (< RM 1500.00)\n");
+                    fw.write("--------------------------------------------------\n");
+                }
+                fw.close();
+                TextField successMsg = new TextField("Pay slips generated successfully in " + new File("pay_slips.txt").getAbsolutePath());
+                successMsg.setEditable(false);
+                successMsg.setStyle("-fx-background-color: transparent; -fx-text-fill: green; -fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
+                allCards.getChildren().add(successMsg);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+            allCards.getChildren().add(buttonBox);
+
         sPane.setContent(allCards);
         sPane.setFitToWidth(true);
-        pane.setCenter(sPane);
-
-        // Title at top
-        Label title = new Label("Pay Slip");
-        title.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 22px; -fx-font-weight: bold;");
-        HBox titleBox = new HBox(title);
-        titleBox.setPadding(new Insets(20));
-        titleBox.setAlignment(Pos.CENTER_LEFT);
-        pane.setTop(titleBox);
 
         Scene scene = new Scene(pane, 500, 500);
         Stage stage = new Stage();
