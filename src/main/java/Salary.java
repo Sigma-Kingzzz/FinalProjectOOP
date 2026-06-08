@@ -131,7 +131,7 @@ public class Salary {
 
         Scene scene = new Scene(pane, 500, 500);
         Stage stage = new Stage();
-        stage.setTitle("Pay Slip");
+        stage.setTitle("Pay Slip Page");
         stage.setScene(scene);
         stage.show();
     }
