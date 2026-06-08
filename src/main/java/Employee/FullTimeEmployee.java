@@ -12,9 +12,9 @@ public class FullTimeEmployee extends Employee {
     private double benefits;
     
     // Constructor
-    public FullTimeEmployee(String employeeID, String name, double basicSalary, double benefits) {
+    public FullTimeEmployee(String employeeID, String name, double basicSalary, String status,double benefits) {
         // 'super' calls the parent (Employee) constructor
-        super(employeeID, name, basicSalary); 
+        super(employeeID, name, basicSalary, status); 
         this.benefits = benefits;
     }
 

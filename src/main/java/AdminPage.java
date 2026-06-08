@@ -14,23 +14,75 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.TextField;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
-
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 public class AdminPage extends Application {
     
     @Override
     public void start(Stage primaryStage) {
         ArrayList<Employee> staffList = new ArrayList<>();
         // Ali is full-time: ID, Name, Base Salary, Benefits
-        staffList.add(new FullTimeEmployee("D01", "Aiman", 2500.00, 500.00)); 
+        staffList.add(new FullTimeEmployee("D01", "Aiman", 2500.00, "Full-Time",500.00)); 
         // Sarah is part-time: ID, Name, Hourly Rate, Hours Worked
-        staffList.add(new PartTimeEmployee("D02", "Haikal", 15.00, 80));
+        staffList.add(new PartTimeEmployee("D02", "Haikal", 15.00, "Part-Time",80));
+        BorderPane pane = new BorderPane();
+        beforeAdmin(pane, staffList);
+        Scene scene = new Scene(pane, 500, 500);
+        primaryStage.setTitle("Admin Page");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    public static void beforeAdmin(BorderPane pane, ArrayList<Employee> staffList){
+        
+        Image imageAdmin =  new Image("file:"+"C:\\Users\\muhai\\OneDrive\\Pictures\\administrator.png");
+        Image imagePSlip = new Image("file:"+"C:\\Users\\muhai\\OneDrive\\Pictures\\payslip.png");
+        
+        ImageView ivPSlip = new ImageView(imagePSlip);
+        ImageView ivAdmin = new ImageView(imageAdmin);
+        
+        ivPSlip.setFitHeight(100);
+        ivPSlip.setFitWidth(100);
+        ivAdmin.setFitHeight(100);
+        ivAdmin.setFitWidth(100);
+        
+        Button paySlip = new Button("PaySlip", ivPSlip);
+        Button admin = new Button("Administration", ivAdmin);
+        
+        paySlip.setContentDisplay(ContentDisplay.TOP);
+        admin.setContentDisplay(ContentDisplay.TOP);
+        
+        paySlip.setGraphicTextGap(10);
+        admin.setGraphicTextGap(10);
+        
+        HBox btnBox = new HBox(15);
+        btnBox.getChildren().addAll(paySlip, admin);
+        
+        btnBox.setAlignment(Pos.CENTER);
+        
+        pane.setCenter(btnBox);
+        
+        admin.setOnAction(e -> {
+            enterAdmin(staffList);
+        });
+    }
+    
+    public static void enterAdmin(ArrayList<Employee> staffList){
         BorderPane pane = new BorderPane();
         Button addBtn = new Button("Add Employee");
         pane.setStyle("-fx-background-color: #f5f5f5;");
-        pane.setTop(addBtn);
+        pane.setBottom(addBtn);
         BorderPane.setMargin(addBtn, new Insets(20));
         showEmployee(staffList, pane);
         
@@ -48,21 +100,13 @@ public class AdminPage extends Application {
         });
         
         Scene scene = new Scene(pane, 500, 500);
-        primaryStage.setTitle("Admin Page");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        Stage stage = new Stage();
+        stage.setTitle("Administarion Page");
+        stage.setScene(scene);
+        stage.show();
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-    
-    
     public static void showEmployee(ArrayList<Employee> staffList, BorderPane pane) {
-        
+        ScrollPane sPane = new ScrollPane();
         VBox showStaff = new VBox(15);
         showStaff.setPadding(new Insets(20));
         // Clear previous items from the center so they don't duplicate on refresh
@@ -74,14 +118,16 @@ public class AdminPage extends Application {
         Label staffName = new Label("Name : " + s.getName());
         // Calls your polymorphic calculateSalary() method automatically!
         Label salary = new Label("Salary : RM " + String.format("%.2f", s.calculateSalary())); 
-        
+        Label statusLab = new Label("Status : " + s.getStatus());
         staffId.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
         staffName.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
         salary.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
+        statusLab.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
         
         staffId.setPrefWidth(60);
         staffName.setPrefWidth(120);
-        salary.setPrefWidth(120);
+        salary.setPrefWidth(140);
+        statusLab.setPrefWidth(130);
         
         Button delete = new Button("Delete");
         Button update = new Button("Update");
@@ -100,7 +146,7 @@ public class AdminPage extends Application {
             "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);"
         );
         
-        staffCard.getChildren().addAll(staffId, staffName, salary, btnBox);
+        staffCard.getChildren().addAll(staffId, staffName, salary, statusLab,btnBox);
         showStaff.getChildren().add(staffCard);
             // Pass the raw ID string directly from the object instead of the Label text
         delete.setOnAction(e -> {
@@ -115,8 +161,9 @@ public class AdminPage extends Application {
         
         update.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px; -fx-background-color: #2196F3; -fx-text-fill: white;");
     }
-    
-    pane.setCenter(showStaff);
+    sPane.setContent(showStaff);
+    sPane.setFitToWidth(true);
+    pane.setCenter(sPane);
 }
     
     
@@ -184,11 +231,13 @@ public class AdminPage extends Application {
             String name = NameTf.getText();
             double val1 = Double.parseDouble(extraTf1.getText());
             double val2 = Double.parseDouble(extraTf2.getText());
-
+            String status;
             if (rbFullTime.isSelected()) {
-                newEmp = new FullTimeEmployee(id, name, val1, val2);
+                status = "Full-Time";
+                newEmp = new FullTimeEmployee(id, name, val1, status,val2);
             } else {
-                newEmp = new PartTimeEmployee(id, name, val1, (int) val2);
+                status = "Part-Time";
+                newEmp = new PartTimeEmployee(id, name, val1, status,(int) val2);
             }
 
             // Call the team's handler (make sure AddUser class accepts 'Employee' now instead of 'Staff')
@@ -278,9 +327,9 @@ public class AdminPage extends Application {
             double val2 = Double.parseDouble(extraTf2.getText());
 
             if (finalTarget instanceof FullTimeEmployee) {
-                updatedEmp = new FullTimeEmployee(ID, name, val1, val2);
+                updatedEmp = new FullTimeEmployee(ID, name, val1, "Full-Time",val2);
             } else {
-                updatedEmp = new PartTimeEmployee(ID, name, val1, (int) val2);
+                updatedEmp = new PartTimeEmployee(ID, name, val1, "Part-Time",(int) val2);
             }
 
             // Execute the team's Update mechanism
