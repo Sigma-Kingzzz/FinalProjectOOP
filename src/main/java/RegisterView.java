@@ -1,10 +1,10 @@
-
+import javafx.animation.FadeTransition;
 import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
-
+import javafx.util.Duration;
 
 public class RegisterView {
 
@@ -14,6 +14,7 @@ public class RegisterView {
 
     private TextField     nameField, emailField, extraField;
     private PasswordField passField, confirmField;
+    private ComboBox<String> roleCombo;
     private Label         errorLabel, extraLabel;
     private Button        registerBtn;
 
@@ -97,7 +98,18 @@ public class RegisterView {
         emailField.getStyleClass().add("form-field");
         emailBox.getChildren().addAll(emailLbl, emailField);
 
-        // Dynamic extra field (Permanently set for Employee context)
+        // Role
+        VBox roleBox = new VBox(6);
+        Label roleLbl = new Label("Role");
+        roleLbl.getStyleClass().add("field-label");
+        roleCombo = new ComboBox<>();
+        roleCombo.getItems().addAll("Employee", "Admin");
+        roleCombo.setValue("Employee");
+        roleCombo.getStyleClass().add("form-field");
+        roleCombo.setMaxWidth(Double.MAX_VALUE);
+        roleBox.getChildren().addAll(roleLbl, roleCombo);
+
+        // Dynamic extra field
         VBox extraBox = new VBox(6);
         extraLabel = new Label("Position / Job Title");
         extraLabel.getStyleClass().add("field-label");
@@ -105,6 +117,14 @@ public class RegisterView {
         extraField.setPromptText("e.g. Software Engineer");
         extraField.getStyleClass().add("form-field");
         extraBox.getChildren().addAll(extraLabel, extraField);
+
+        roleCombo.setOnAction(e -> {
+            boolean isAdmin = "Admin".equals(roleCombo.getValue());
+            extraLabel.setText(isAdmin ? "Department" : "Position / Job Title");
+            extraField.setPromptText(isAdmin
+                ? "e.g. Human Resources"
+                : "e.g. Software Engineer");
+        });
 
         // Password row
         HBox passRow = new HBox(14);
@@ -125,4 +145,76 @@ public class RegisterView {
         confirmField.setPromptText("Repeat password");
         confirmField.getStyleClass().add("form-field");
         confirmBox.getChildren().addAll(confirmLbl, confirmField);
-        HBox.setHgrow(confirmBox, Priority.ALWAYS
+        HBox.setHgrow(confirmBox, Priority.ALWAYS);
+
+        passRow.getChildren().addAll(passBox, confirmBox);
+
+        // Error label
+        errorLabel = new Label();
+        errorLabel.getStyleClass().add("error-label");
+        errorLabel.setVisible(false);
+        errorLabel.setWrapText(true);
+
+        // Register button
+        registerBtn = new Button("Create Account");
+        registerBtn.getStyleClass().add("primary-btn");
+        registerBtn.setMaxWidth(Double.MAX_VALUE);
+        registerBtn.setOnAction(e -> handleRegister());
+
+        // Back to login
+        HBox loginRow = new HBox(6);
+        loginRow.setAlignment(Pos.CENTER);
+        Label already = new Label("Already have an account?");
+        already.getStyleClass().add("muted-text");
+        Hyperlink loginLink = new Hyperlink("Sign in");
+        loginLink.getStyleClass().add("link-text");
+        loginLink.setOnAction(e -> switchToLogin());
+        loginRow.getChildren().addAll(already, loginLink);
+
+        panel.getChildren().addAll(
+                heading, sub,
+                nameBox, emailBox, roleBox, extraBox,
+                passRow,
+                errorLabel,
+                registerBtn,
+                loginRow
+        );
+
+        FadeTransition ft = new FadeTransition(Duration.millis(600), panel);
+        ft.setFromValue(0);
+        ft.setToValue(1);
+        ft.play();
+
+        return panel;
+    }
+
+    private void handleRegister() {
+        registerBtn.setText("Creating account…");
+        registerBtn.setDisable(true);
+        errorLabel.setVisible(false);
+
+        try {
+            User user = auth.register(
+                    nameField.getText(),
+                    emailField.getText(),
+                    passField.getText(),
+                    confirmField.getText(),
+                    roleCombo.getValue(),
+                    extraField.getText()
+            );
+
+
+        } catch (AuthController.AuthException ex) {
+            errorLabel.setText("⚠  " + ex.getMessage());
+            errorLabel.setVisible(true);
+        } finally {
+            registerBtn.setText("Create Account");
+            registerBtn.setDisable(false);
+        }
+    }
+
+    private void switchToLogin() {
+        LoginView login = new LoginView(stage);
+        stage.getScene().setRoot(login.getRoot());
+    }
+}
