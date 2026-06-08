@@ -76,6 +76,11 @@ public class AdminPage extends Application {
         admin.setOnAction(e -> {
             enterAdmin(staffList);
         });
+
+        paySlip.setOnAction(e -> {
+            Salary sal = new Salary(staffList);
+            sal.getSalaryBreakdown();
+        });
     }
     
     public static void enterAdmin(ArrayList<Employee> staffList){
