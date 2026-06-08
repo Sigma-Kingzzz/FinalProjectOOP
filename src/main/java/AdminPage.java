@@ -21,6 +21,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.effect.DropShadow;
+
 
 public class AdminPage extends Application {
      
@@ -74,6 +76,14 @@ public class AdminPage extends Application {
         ivPSlip.setFitWidth(100);
         ivAdmin.setFitHeight(100);
         ivAdmin.setFitWidth(100);
+
+        HBox welcomeBox = new HBox(20);
+        welcomeBox.setAlignment(Pos.TOP_CENTER);
+        TextField welcomeMsg = new TextField("Welcome, Admin!");
+        welcomeMsg.setEditable(false);
+        welcomeMsg.setStyle("-fx-background-color: transparent; -fx-text-fill: #333; -fx-font-family: 'Segoe UI'; -fx-font-size: 18px; -fx-font-weight: bold;");
+        welcomeMsg.setAlignment(Pos.CENTER);
+        welcomeBox.getChildren().add(welcomeMsg);
         
         Button paySlip = new Button("PaySlip", ivPSlip);
         Button admin = new Button("Administration", ivAdmin);
@@ -83,12 +93,31 @@ public class AdminPage extends Application {
         
         paySlip.setGraphicTextGap(10);
         admin.setGraphicTextGap(10);
+        welcomeBox.setPadding(new Insets(20, 0, 20, 0));
+        paySlip.setStyle(
+            "-fx-background-color: #2196F3;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-family: 'Segoe UI';" +
+            "-fx-font-size: 14px;" +
+            "-fx-padding: 8 16;" +
+            "-fx-background-radius: 5;"
+        );
+        admin.setStyle(
+            "-fx-background-color: #4CAF50;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-family: 'Segoe UI';" +
+            "-fx-font-size: 14px;" +
+            "-fx-padding: 8 16;" +
+            "-fx-background-radius: 5;"
+        );
+
         
         HBox btnBox = new HBox(15);
         btnBox.getChildren().addAll(paySlip, admin);
         btnBox.setAlignment(Pos.CENTER);
         
         pane.setCenter(btnBox);
+        pane.setTop(welcomeBox);
         
         admin.setOnAction(e -> {
             enterAdmin(staffList);
