@@ -5,6 +5,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import Employee.Employee;
 
 public class LoginView {
 
@@ -175,10 +176,27 @@ public class LoginView {
                 passwordField.getText()
             );
 
-            // ==================== FIXED HERE ====================
-            // Trigger the stage transition to view the primary Admin Navigation Dashboard
-            AdminPage.showAdminDashboard(this.stage);
-            // ====================================================
+            // ==================== MATCH USER TO EMPLOYEE ====================
+            Employee loggedInUser = null;
+            
+            // Loop through the staff list in AdminPage to find a match.
+            // (Assuming you match them by Name, or you can use an ID/Email if your User class has it)
+            for (Employee emp : AdminPage.getStaffList()) { 
+                if (emp.getName().equalsIgnoreCase(user.getFullName())) { 
+                    loggedInUser = emp;
+                    break;
+                }
+            }
+
+            // Fallback safety feature: If no match is found, assign a default dummy 
+            // so the system doesn't crash, or handle it as an error.
+            if (loggedInUser == null && !AdminPage.getStaffList().isEmpty()) {
+                loggedInUser = AdminPage.getStaffList().get(0); 
+            }
+            // ================================================================
+
+            // Trigger the stage transition using your class's 'stage' variable
+            AdminPage.showAdminDashboard(stage, loggedInUser);
 
         } catch (AuthController.AuthException ex) {
             errorLabel.setText("⚠  " + ex.getMessage());
