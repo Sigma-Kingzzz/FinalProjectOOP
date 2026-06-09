@@ -139,8 +139,8 @@ public class LoginView {
         demoBox.getStyleClass().add("demo-box");
         Label demoTitle = new Label("Demo Accounts");
         demoTitle.getStyleClass().add("demo-title");
-        Label demo1 = new Label("Admin:    admin@payroll.com  /  Admin@123");
-        Label demo2 = new Label("Employee: john@payroll.com   /  Employee@1");
+        Label demo1 = new Label("Admin:    aiman@payroll.com  /  Admin@123");
+        Label demo2 = new Label("Employee: haikal@payroll.com   /  Employee@1");
         demo1.getStyleClass().add("demo-cred");
         demo2.getStyleClass().add("demo-cred");
         demoBox.getChildren().addAll(demoTitle, demo1, demo2);
