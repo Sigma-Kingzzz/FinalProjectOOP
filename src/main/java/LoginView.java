@@ -140,7 +140,7 @@ public class LoginView {
         Label demoTitle = new Label("Demo Accounts");
         demoTitle.getStyleClass().add("demo-title");
         Label demo1 = new Label("Admin:    aiman@payroll.com  /  Admin@123");
-        Label demo2 = new Label("Employee: haikal@payroll.com   /  Employee@1");
+        Label demo2 = new Label("Employee: haikal@payroll.com  /  Employee@1");
         demo1.getStyleClass().add("demo-cred");
         demo2.getStyleClass().add("demo-cred");
         demoBox.getChildren().addAll(demoTitle, demo1, demo2);
@@ -196,7 +196,7 @@ public class LoginView {
             // ================================================================
 
             // Trigger the stage transition using your class's 'stage' variable
-            AdminPage.showAdminDashboard(stage, loggedInUser);
+            AdminPage.showAdminDashboard(stage, loggedInUser, user);
 
         } catch (AuthController.AuthException ex) {
             errorLabel.setText("⚠  " + ex.getMessage());
