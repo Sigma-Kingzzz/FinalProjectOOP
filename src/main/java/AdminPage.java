@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -83,7 +84,14 @@ public class AdminPage extends Application {
     ivAdmin.setFitWidth(100);
     ivZakat.setFitHeight(100);
     ivZakat.setFitWidth(100);
-    
+
+    Text welcome = new Text("Welcome, " + loggedInUser.getName() + "!");
+    welcome.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 18px; -fx-font-weight: bold; -fx-color: #0084ff;");
+    HBox welcomeBox = new HBox(welcome);
+    welcomeBox.setAlignment(Pos.CENTER);
+    welcomeBox.setPadding(new Insets(20));
+    pane.setTop(welcomeBox);
+
     Button paySlip = new Button("PaySlip", ivPSlip);
     Button admin = new Button("Administration", ivAdmin);
     Button zakatCalculator = new Button("Zakat Calculator", ivZakat);
