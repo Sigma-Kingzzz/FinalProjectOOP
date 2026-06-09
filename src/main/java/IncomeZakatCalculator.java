@@ -35,14 +35,20 @@ public class IncomeZakatCalculator {
         this.currentNisab = Math.max(0, currentNisab);
     }
 
-    public void getIncome(double salary, double bonus) {
+    // --- Mutators (Setters) for Income ---
+    public void setIncome(double salary, double bonus, double dividend) {
         this.salaryAndAllowances = Math.max(0, salary);
         this.bonusAndCommission = Math.max(0, bonus);
+        this.dividendAndRoyalty = Math.max(0, dividend);
     }
 
     // --- Mutators (Setters) for Deductions ---
-    public void setDeductions(double basicExpenses) {
-        this.basicSelfAndFamilyExpenses = Math.max(0, basicExpenses);
+    public void setDeductions(double epf, double basic, double parents, double medEdu, double otherZakat) {
+        this.epfContribution = Math.max(0, epf);
+        this.basicSelfAndFamilyExpenses = Math.max(0, basic);
+        this.parentsDependentExemption = Math.max(0, parents);
+        this.medicalAndEducationExpenses = Math.max(0, medEdu);
+        this.otherPaidZakat = Math.max(0, otherZakat);
     }
 
     public double getCurrentNisab() { return currentNisab; }

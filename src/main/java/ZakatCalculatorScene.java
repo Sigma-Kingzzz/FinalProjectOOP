@@ -1,19 +1,16 @@
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 public class ZakatCalculatorScene {
     private final HBox rootLayout;
     private final IncomeZakatCalculator calculator = new IncomeZakatCalculator();
 
-    public ZakatCalculatorScene(Employee currentUser) {
+    public ZakatCalculatorScene() {
         rootLayout = new HBox(20);
         rootLayout.setPadding(new Insets(25));
         rootLayout.setStyle("-fx-background-color: #f4f6f9;");
@@ -132,12 +129,17 @@ public class ZakatCalculatorScene {
         btnCalculate.setOnAction(e -> {
             try {
                 calculator.setCurrentNisab(Double.parseDouble(txtNisab.getText().trim()));
-                calculator.getIncome(
+                calculator.setIncome(
                         Double.parseDouble(txtSalary.getText().trim()),
-                        Double.parseDouble(txtBonus.getText().trim())
+                        Double.parseDouble(txtBonus.getText().trim()),
+                        Double.parseDouble(txtDividend.getText().trim())
                 );
                 calculator.setDeductions(
-                        Double.parseDouble(txtEpf.getText().trim())
+                        Double.parseDouble(txtEpf.getText().trim()),
+                        Double.parseDouble(txtBasic.getText().trim()),
+                        Double.parseDouble(txtParents.getText().trim()),
+                        Double.parseDouble(txtMedEdu.getText().trim()),
+                        Double.parseDouble(txtOtherZakat.getText().trim())
                 );
 
                 lblGrossIncome.setText(String.format("RM %,.2f", calculator.calculateTotalGrossIncome()));

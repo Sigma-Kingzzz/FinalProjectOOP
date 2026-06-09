@@ -75,29 +75,35 @@ public class AdminPage extends Application {
     
     ImageView ivPSlip = new ImageView(imagePSlip);
     ImageView ivAdmin = new ImageView(imageAdmin);
+    ImageView ivZakat = new ImageView(new Image("https://cdn-icons-png.freepik.com/512/4392/4392102.png"));
     
     ivPSlip.setFitHeight(100);
     ivPSlip.setFitWidth(100);
     ivAdmin.setFitHeight(100);
     ivAdmin.setFitWidth(100);
+    ivZakat.setFitHeight(100);
+    ivZakat.setFitWidth(100);
     
     Button paySlip = new Button("PaySlip", ivPSlip);
     Button admin = new Button("Administration", ivAdmin);
+    Button zakatCalculator = new Button("Zakat Calculator", ivZakat);
     
     paySlip.setContentDisplay(ContentDisplay.TOP);
     admin.setContentDisplay(ContentDisplay.TOP);
+    zakatCalculator.setContentDisplay(ContentDisplay.TOP);
     
     paySlip.setGraphicTextGap(10);
     admin.setGraphicTextGap(10);
+    zakatCalculator.setGraphicTextGap(10);
     
     HBox btnBox = new HBox(25);
     btnBox.setAlignment(Pos.CENTER);
     
     // Only show Administration button if logged-in user is an Admin
     if (loggedInAuth instanceof Admin) {
-        btnBox.getChildren().addAll(paySlip, admin);
+        btnBox.getChildren().addAll(paySlip, admin, zakatCalculator);
     } else {
-        btnBox.getChildren().add(paySlip);
+        btnBox.getChildren().addAll(paySlip, zakatCalculator);
     }
     
     pane.setCenter(btnBox);
@@ -106,7 +112,11 @@ public class AdminPage extends Application {
         enterAdmin(staffList);
     });
 
-        paySlip.setOnAction(e -> {
+    zakatCalculator.setOnAction(e -> {
+        enterZakatCalculator();
+    });
+
+    paySlip.setOnAction(e -> {
         Salary sal = new Salary(loggedInUser);
         sal.getSalaryBreakdown(); // Runs your original logic
         
@@ -192,6 +202,16 @@ public static void savePayslipToTxt(Employee emp) {
         Scene scene = new Scene(pane, 550, 550);
         Stage stage = new Stage();
         stage.setTitle("Administration Subsystem");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public static void enterZakatCalculator() {
+        ZakatCalculatorScene zakatScene = new ZakatCalculatorScene();
+        Scene scene = new Scene(zakatScene.getLayout(), 600, 500);
+        
+        Stage stage = new Stage();
+        stage.setTitle("Income Zakat Calculator");
         stage.setScene(scene);
         stage.show();
     }
