@@ -42,7 +42,7 @@ public class AuthController {
         } else {
             String position = (extraField == null || extraField.isBlank()) ? "Staff" : extraField;
             newUser = new Employee(id, fullName.trim(), email.trim().toLowerCase(),
-                                   hash, position, 0.0);
+                                   hash, position, 0.0); // Default salary and zakat status for new employees
         }
 
         UserStore.addUser(newUser);

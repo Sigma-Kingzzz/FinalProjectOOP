@@ -3,6 +3,7 @@ public class Employee extends User {
 
     private String position;
     private double baseSalary;
+    private String zakatStatus;
 
     public Employee(String userId, String fullName, String email,
                     String passwordHash, String position, double baseSalary) {

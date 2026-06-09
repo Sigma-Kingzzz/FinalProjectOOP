@@ -25,8 +25,8 @@ public class test {
     public static void ShowStaff(ArrayList<Staff> staffList){
         for(Staff s : staffList){
             System.out.println(s.getStaffId() + " " + s.getStaffName() + " " + String.format("%.2f", s.getSalary()));
-            CalculateZakat z = new CalculateZakat(s.getSalary()); // Example with the current staff member's salary
-            System.out.println("Zakat Amount for " + s.getStaffName() + ": RM " + String.format("%.2f", z.calculateZakat()));
+            IncomeZakatCalculator z = new IncomeZakatCalculator(s.getSalary()); // Example with the current staff member's salary
+            System.out.println("Zakat Amount for " + s.getStaffName() + ": RM " + String.format("%.2f", z.calculateAnnualZakat()));
         }
     }
 

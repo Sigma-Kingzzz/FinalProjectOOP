@@ -58,11 +58,11 @@ public class Salary {
         Label idLabel = new Label("Employee ID  : " + currentUser.getEmployeeID());
         Label nameLabel = new Label("Name         : " + currentUser.getName());
         Label statusLabel = new Label("Status       : " + currentUser.getStatus());
+        IncomeZakatCalculator z = new IncomeZakatCalculator(5000.00);
 
         idLabel.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px;");
         nameLabel.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px;");
         statusLabel.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px;");
-
         // Extra labels depending on Full-Time or Part-Time
         Label extra1 = new Label();
         Label extra2 = new Label();
@@ -73,6 +73,9 @@ public class Salary {
             FullTimeEmployee ft = (FullTimeEmployee) currentUser;
             extra1.setText("Basic Salary : RM " + String.format("%.2f", ft.getBasicSalary()));
             extra2.setText("Benefits     : RM " + String.format("%.2f", ft.getBenefits()));
+            z.getIncome(ft.getBasicSalary(), ft.getBenefits());
+            Label zakatLabel = new Label("Zakat : RM " + String.format("%.2f", z.calculateAnnualZakat()));
+            zakatLabel.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px;");
         } else if (currentUser instanceof PartTimeEmployee) {
             PartTimeEmployee pt = (PartTimeEmployee) currentUser;
             extra1.setText("Hourly Rate  : RM " + String.format("%.2f", pt.getHourlyRate()));
