@@ -2,9 +2,7 @@ import Employee.Employee;
 import Employee.FullTimeEmployee;
 import Employee.PartTimeEmployee;
 import java.util.ArrayList;
-
 import javax.smartcardio.Card;
-
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,16 +23,19 @@ public class Salary {
     private Employee currentUser;
 
     // Constructor now takes just ONE employee (the logged-in user)
-    public Salary(Employee currentUser) {
+    public Salary(Employee currentUser) 
+    {
         this.currentUser = currentUser;
     }
 
     // calculateSalary() - returns the salary of one employee
-    public double calculateSalary() {
+    public double calculateSalary() 
+    {
         return currentUser.calculateSalary();
     }
 
-    public boolean checkSalary() {
+    public boolean checkSalary() 
+    {
         double minimumWage = 1500.00;
         return calculateSalary() >= minimumWage;
     }
@@ -69,14 +70,17 @@ public class Salary {
         extra1.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px;");
         extra2.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px;");
 
-        if (currentUser instanceof FullTimeEmployee) {
+        if (currentUser instanceof FullTimeEmployee)
+        {
             FullTimeEmployee ft = (FullTimeEmployee) currentUser;
             extra1.setText("Basic Salary : RM " + String.format("%.2f", ft.getBasicSalary()));
             extra2.setText("Benefits     : RM " + String.format("%.2f", ft.getBenefits()));
             z.getIncome(ft.getBasicSalary(), ft.getBenefits());
             Label zakatLabel = new Label("Zakat : RM " + String.format("%.2f", z.calculateAnnualZakat()));
             zakatLabel.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px;");
-        } else if (currentUser instanceof PartTimeEmployee) {
+        }
+        else if (currentUser instanceof PartTimeEmployee)
+        {
             PartTimeEmployee pt = (PartTimeEmployee) currentUser;
             extra1.setText("Hourly Rate  : RM " + String.format("%.2f", pt.getHourlyRate()));
             extra2.setText("Hours Worked : " + pt.getHoursWorked() + " hrs");
@@ -88,10 +92,13 @@ public class Salary {
 
         // Minimum wage check label
         Label minWageLabel = new Label();
-        if (checkSalary()) {
+        if (checkSalary()) 
+        {
             minWageLabel.setText("Minimum Wage : MEETS (>= RM 1500.00)");
             minWageLabel.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px; -fx-text-fill: green;");
-        } else {
+        } 
+        else 
+        {
             minWageLabel.setText("Minimum Wage : BELOW (< RM 1500.00)");
             minWageLabel.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px; -fx-text-fill: red;");
         }
@@ -108,7 +115,8 @@ public class Salary {
             confirm.setHeaderText(null);
             
             confirm.showAndWait().ifPresent(response -> {
-                if (response == javafx.scene.control.ButtonType.YES) {
+                if (response == javafx.scene.control.ButtonType.YES) 
+                {
                     // FIXED: Changed this.loggedInUser to currentUser
                     AdminPage.savePayslipToTxt(currentUser); 
                 }
