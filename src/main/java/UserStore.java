@@ -6,13 +6,13 @@ public class UserStore {
     private static final Map<String, User> store = new HashMap<>();
 
     static {
-        store.put("admin@payroll.com",
-                new Admin("U001", "System Administrator", "admin@payroll.com",
-                        PasswordUtil.hash("Admin@123"), "IT"));
+        store.put("aiman@payroll.com",
+            new Admin("U001", "Aiman", "aiman@payroll.com",   // ← was "System Administrator"
+                PasswordUtil.hash("Admin@123"), "IT"));
 
-        store.put("john@payroll.com",
-                new Employee("U002", "John Doe", "john@payroll.com",
-                        PasswordUtil.hash("Employee@1"), "Software Engineer", 5000.00));
+        store.put("haikal@payroll.com",
+            new Employee("U002", "Haikal", "haikal.payroll.com", // ← was "John Doe"
+                PasswordUtil.hash("Employee@1"), "Software Engineer", 5000.00));
     }
 
     private UserStore() {}
