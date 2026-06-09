@@ -55,19 +55,19 @@ public class AdminPage extends Application {
      * This method transitions the view from Login to the main Dashboard choice pane.
      * It is triggered automatically inside LoginView upon a successful sign-in.
      */
-    public static void showAdminDashboard(Stage stage, Employee loggedInUser) {
+    public static void showAdminDashboard(Stage stage, Employee loggedInUser, User loggedInAuth) {
         stage.setResizable(true); // Allow dynamic sizing for dashboards
         stage.setTitle("PayrollPro - Dashboard");
         
         BorderPane pane = new BorderPane();
-        beforeAdmin(pane, staffList, loggedInUser); // Loads selection buttons (PaySlip / Administration)
+        beforeAdmin(pane, staffList, loggedInUser, loggedInAuth); // Loads selection buttons (PaySlip / Administration)
         
         Scene scene = new Scene(pane, 500, 500);
         stage.setScene(scene);
         stage.show();
     }
 
-    public static void beforeAdmin(BorderPane pane, ArrayList<Employee> staffList, Employee loggedInUser){
+    public static void beforeAdmin(BorderPane pane, ArrayList<Employee> staffList, Employee loggedInUser, User loggedInAuth){
     pane.setStyle("-fx-background-color: #f5f5f5;");
     
     Image imageAdmin = new Image("https://img.magnific.com/premium-vector/technology-concept-vector-illustration-featuring-consulting-design-flat-style-elements_1226483-4088.jpg?semt=ais_hybrid&w=740&q=80");
@@ -91,8 +91,14 @@ public class AdminPage extends Application {
     admin.setGraphicTextGap(10);
     
     HBox btnBox = new HBox(25);
-    btnBox.getChildren().addAll(paySlip, admin);
     btnBox.setAlignment(Pos.CENTER);
+    
+    // Only show Administration button if logged-in user is an Admin
+    if (loggedInAuth instanceof Admin) {
+        btnBox.getChildren().addAll(paySlip, admin);
+    } else {
+        btnBox.getChildren().add(paySlip);
+    }
     
     pane.setCenter(btnBox);
     
