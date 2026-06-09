@@ -62,7 +62,7 @@ public class AdminPage extends Application {
         
         BorderPane pane = new BorderPane();
         beforeAdmin(pane, staffList, loggedInUser, loggedInAuth); // Loads selection buttons (PaySlip / Administration)
-        
+    
         Scene scene = new Scene(pane, 500, 500);
         stage.setScene(scene);
         stage.show();
@@ -73,10 +73,22 @@ public class AdminPage extends Application {
     
     Image imageAdmin = new Image("https://cdn-icons-png.freepik.com/512/6830/6830335.png");
     Image imagePSlip = new Image("https://cdn-icons-png.flaticon.com/512/1332/1332014.png");
+    Image bg = new Image("https://www.pngall.com/wp-content/uploads/14/Pattern-PNG-Photos.png");
     
     ImageView ivPSlip = new ImageView(imagePSlip);
     ImageView ivAdmin = new ImageView(imageAdmin);
     ImageView ivZakat = new ImageView(new Image("https://cdn-icons-png.freepik.com/512/4392/4392102.png"));
+    BackgroundSize backgroundSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true);
+       BackgroundImage backgroundImage = new BackgroundImage(
+            bg,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            backgroundSize
+        );
+
+      pane.setBackground(new Background(backgroundImage));
+
     
     ivPSlip.setFitHeight(100);
     ivPSlip.setFitWidth(100);
