@@ -40,13 +40,6 @@ public class AdminPage extends Application {
         LoginView loginView = new LoginView(primaryStage); 
         
         Scene loginScene = new Scene(loginView.getRoot(), 900, 600);
-        try {
-            loginScene.getStylesheets().add(
-                getClass().getResource("style.css").toExternalForm()
-            );
-        } catch (Exception e) {
-            System.out.println("style.css not found, running with default styling.");
-        }
 
         primaryStage.setScene(loginScene);
         primaryStage.show();
@@ -69,7 +62,6 @@ public class AdminPage extends Application {
     }
 
     public static void beforeAdmin(BorderPane pane, ArrayList<Employee> staffList, Employee loggedInUser, User loggedInAuth){
-    pane.setStyle("-fx-background-color: #488bcd;");
     
     Image imageAdmin = new Image("https://cdn-icons-png.freepik.com/512/6830/6830335.png");
     Image imagePSlip = new Image("https://cdn-icons-png.flaticon.com/512/1332/1332014.png");
@@ -78,30 +70,23 @@ public class AdminPage extends Application {
     ImageView ivPSlip = new ImageView(imagePSlip);
     ImageView ivAdmin = new ImageView(imageAdmin);
     ImageView ivZakat = new ImageView(new Image("https://cdn-icons-png.freepik.com/512/4392/4392102.png"));
-    BackgroundSize backgroundSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true);
-       BackgroundImage backgroundImage = new BackgroundImage(
-            bg,
-            BackgroundRepeat.NO_REPEAT,
-            BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER,
-            backgroundSize
-        );
-
-      pane.setBackground(new Background(backgroundImage));
+    ImageView ivBg = new ImageView(bg);
+    ivBg.setOpacity(0.10); // Set opacity for subtlety
 
     
-    ivPSlip.setFitHeight(100);
-    ivPSlip.setFitWidth(100);
-    ivAdmin.setFitHeight(100);
-    ivAdmin.setFitWidth(100);
-    ivZakat.setFitHeight(100);
-    ivZakat.setFitWidth(100);
+    ivPSlip.setFitHeight(200);
+    ivPSlip.setFitWidth(200);
+    ivAdmin.setFitHeight(200);
+    ivAdmin.setFitWidth(200);
+    ivZakat.setFitHeight(200);
+    ivZakat.setFitWidth(200);
+    
 
     Text welcome = new Text("Welcome, " + loggedInUser.getName() + "!");
-    welcome.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 18px; -fx-font-weight: bold; -fx-color: #0084ff;");
+    welcome.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 50px; -fx-font-weight: bold; -fx-color: #0084ff;");
     HBox welcomeBox = new HBox(welcome);
     welcomeBox.setAlignment(Pos.CENTER);
-    welcomeBox.setPadding(new Insets(20));
+    welcomeBox.setPadding(new Insets(50, 20, 0, 20));
     pane.setTop(welcomeBox);
 
     Button paySlip = new Button("PaySlip", ivPSlip);
@@ -127,6 +112,7 @@ public class AdminPage extends Application {
     }
     
     pane.setCenter(btnBox);
+    pane.getChildren().add(ivBg); // Add background image to the pane
     
     admin.setOnAction(e -> {
         enterAdmin(staffList);
