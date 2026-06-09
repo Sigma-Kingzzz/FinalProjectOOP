@@ -23,6 +23,7 @@ public class ZakatCalculatorScene {
         inputGrid.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-color: #e2e8f0; -fx-border-radius: 8px;");
 
         TextField txtNisab = new TextField("25000");
+        txtNisab.editableProperty().set(false); // Make Nisab field non-editable as it's a fixed threshold
         TextField txtSalary = new TextField("0");
         TextField txtBonus = new TextField("0");
         TextField txtDividend = new TextField("0");
