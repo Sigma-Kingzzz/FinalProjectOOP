@@ -84,10 +84,9 @@ public class AdminPage extends Application {
 
     Text welcome = new Text("Welcome, " + loggedInUser.getName() + "!");
     welcome.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 50px; -fx-font-weight: bold; -fx-color: #0084ff;");
-    HBox welcomeBox = new HBox(welcome);
-    welcomeBox.setAlignment(Pos.CENTER);
-    welcomeBox.setPadding(new Insets(50, 20, 0, 20));
-    pane.setTop(welcomeBox);
+    HBox upperBox = new HBox();
+    upperBox.setAlignment(Pos.CENTER);
+    upperBox.setPadding(new Insets(50, 20, 0, 20));
 
     Button paySlip = new Button("PaySlip", ivPSlip);
     Button admin = new Button("Administration", ivAdmin);
@@ -97,14 +96,15 @@ public class AdminPage extends Application {
     paySlip.setContentDisplay(ContentDisplay.TOP);
     admin.setContentDisplay(ContentDisplay.TOP);
     zakatCalculator.setContentDisplay(ContentDisplay.TOP);
+    logout.setAlignment(Pos.TOP_RIGHT);
 
-    paySlip.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px; -fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20 10 20; -shadow-color: rgba(0,0,0,0.2); -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);");
-    admin.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20 10 20; -shadow-color: rgba(0,0,0,0.2); -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);");
-    zakatCalculator.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px; -fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20 10 20; -shadow-color: rgba(0,0,0,0.2); -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);");
+    paySlip.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px; -fx-background-color: #ff3e8273; -fx-text-fill: black; -fx-font-weight: bold; -fx-padding: 10 20 10 20; -shadow-color: rgba(0,0,0,0.2); -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);");
+    admin.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px; -fx-background-color: #4c98af60; -fx-text-fill: black; -fx-font-weight: bold; -fx-padding: 10 20 10 20; -shadow-color: rgba(0,0,0,0.2); -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);");
+    zakatCalculator.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px; -fx-background-color: #ffff8a89; -fx-text-fill: black; -fx-font-weight: bold; -fx-padding: 10 20 10 20; -shadow-color: rgba(0,0,0,0.2); -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);");
     
-    paySlip.setGraphicTextGap(10);
-    admin.setGraphicTextGap(10);
-    zakatCalculator.setGraphicTextGap(10);
+    paySlip.setGraphicTextGap(20);
+    admin.setGraphicTextGap(20);
+    zakatCalculator.setGraphicTextGap(20);
     
     HBox btnBox = new HBox(25);
     btnBox.setAlignment(Pos.CENTER);
@@ -120,13 +120,21 @@ public class AdminPage extends Application {
     
     // Only show Administration button if logged-in user is an Admin
     if (loggedInAuth instanceof Admin) {
-        btnBox.getChildren().addAll(paySlip, admin, zakatCalculator, logout);
+        btnBox.getChildren().addAll(paySlip, admin, zakatCalculator);
     } else {
-        btnBox.getChildren().addAll(paySlip, zakatCalculator, logout);
+        btnBox.getChildren().addAll(paySlip, zakatCalculator);
     }
+
+    VBox logoutBox = new VBox(25);
+    logoutBox.setAlignment(Pos.TOP_RIGHT);
+    logoutBox.setPadding(new Insets(20));
+    logoutBox.getChildren().add(logout);
+
+    upperBox.getChildren().addAll(welcome, logoutBox);
     
     pane.setCenter(btnBox);
-    pane.getChildren().add(ivBg); // Add background image to the pane
+    pane.setTop(upperBox);
+    pane.getChildren().addAll(ivBg); // Add background image to the pane
     
     admin.setOnAction(e -> {
         enterAdmin(staffList);
@@ -281,7 +289,17 @@ public static void savePayslipToTxt(Employee emp) {
             showStaff.getChildren().add(staffCard);
 
             delete.setOnAction(e -> {
-                deleteEmployee(s.getEmployeeID(), staffList, pane);
+                // Confirmation dialog before deletion
+                Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION, 
+                    "Are you sure you want to delete employee: " + s.getName() + "?", 
+                    ButtonType.OK, ButtonType.CANCEL);
+                confirmAlert.setTitle("Confirm Deletion");
+                confirmAlert.setHeaderText(null);
+                confirmAlert.showAndWait().ifPresent(result -> { 
+                    if (result == ButtonType.OK) {
+                        deleteEmployee(s.getEmployeeID(), staffList, pane);
+                    }
+                });
             });
             delete.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px; -fx-background-color: #f44336; -fx-text-fill: white;");
             
