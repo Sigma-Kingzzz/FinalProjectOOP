@@ -30,7 +30,7 @@ public class Salary {
 
     public boolean checkSalary() 
     {
-        double minimumWage = 1500.00;
+        double minimumWage = 1700.00;
         return calculateSalary() >= minimumWage;
     }
 
@@ -84,12 +84,12 @@ public class Salary {
         Label minWageLabel = new Label();
         if (checkSalary()) 
         {
-            minWageLabel.setText("Minimum Wage : MEETS (>= RM 1500.00)");
+            minWageLabel.setText("Minimum Wage : MEETS (>= RM 1700.00)");
             minWageLabel.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px; -fx-text-fill: green;");
         } 
         else 
         {
-            minWageLabel.setText("Minimum Wage : BELOW (< RM 1500.00)");
+            minWageLabel.setText("Minimum Wage : BELOW (< RM 1700.00)");
             minWageLabel.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px; -fx-text-fill: red;");
         }
         // --- PRINT BUTTON & ALERT LOGIC ---

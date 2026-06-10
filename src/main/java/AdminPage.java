@@ -147,7 +147,6 @@ public class AdminPage extends Application {
     paySlip.setOnAction(e -> {
         Salary sal = new Salary(loggedInUser);
         sal.getSalaryBreakdown(); // Runs your original logic
-        
         });
     }
 
