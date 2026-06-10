@@ -46,6 +46,7 @@ public class RegisterView {
         content.setAlignment(Pos.CENTER);
         content.setPadding(new Insets(40));
 
+
         Label logo = new Label("📋");
         logo.setStyle("-fx-font-size: 64px;");
 
@@ -73,6 +74,7 @@ public class RegisterView {
         panel.setAlignment(Pos.CENTER);
         panel.setPadding(new Insets(40, 70, 40, 70));
         panel.getStyleClass().add("right-panel");
+        panel.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0.5, 0, 4);");
 
         Text heading = new Text("Create Account");
         heading.getStyleClass().add("form-heading");

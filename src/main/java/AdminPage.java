@@ -92,10 +92,15 @@ public class AdminPage extends Application {
     Button paySlip = new Button("PaySlip", ivPSlip);
     Button admin = new Button("Administration", ivAdmin);
     Button zakatCalculator = new Button("Zakat Calculator", ivZakat);
+    Button logout = new Button("Logout");
     
     paySlip.setContentDisplay(ContentDisplay.TOP);
     admin.setContentDisplay(ContentDisplay.TOP);
     zakatCalculator.setContentDisplay(ContentDisplay.TOP);
+
+    paySlip.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px; -fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20 10 20; -shadow-color: rgba(0,0,0,0.2); -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);");
+    admin.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20 10 20; -shadow-color: rgba(0,0,0,0.2); -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);");
+    zakatCalculator.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 16px; -fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20 10 20; -shadow-color: rgba(0,0,0,0.2); -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);");
     
     paySlip.setGraphicTextGap(10);
     admin.setGraphicTextGap(10);
@@ -103,12 +108,21 @@ public class AdminPage extends Application {
     
     HBox btnBox = new HBox(25);
     btnBox.setAlignment(Pos.CENTER);
+
+    logout.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px; -fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15 8 15;");
+    logout.setOnAction(e -> {
+        // Clear session data if needed
+        staffList.clear(); // Optional: Clear staff list on logout for security
+        Stage currentStage = (Stage) logout.getScene().getWindow();
+        currentStage.close();
+        new AdminPage().start(new Stage()); // Restart the app to show login again
+    });
     
     // Only show Administration button if logged-in user is an Admin
     if (loggedInAuth instanceof Admin) {
-        btnBox.getChildren().addAll(paySlip, admin, zakatCalculator);
+        btnBox.getChildren().addAll(paySlip, admin, zakatCalculator, logout);
     } else {
-        btnBox.getChildren().addAll(paySlip, zakatCalculator);
+        btnBox.getChildren().addAll(paySlip, zakatCalculator, logout);
     }
     
     pane.setCenter(btnBox);
@@ -128,7 +142,8 @@ public class AdminPage extends Application {
         
         });
     }
-    
+
+
 public static void savePayslipToTxt(Employee emp) {
     // Generates a unique filename using the employee's name
     String filename = emp.getName() + "_Payslip.txt";
@@ -212,7 +227,7 @@ public static void savePayslipToTxt(Employee emp) {
         stage.show();
     }
 
-    public static void enterZakatCalculator() {
+    public static void enterZakatCalculator() { // Placeholder for Zakat Calculator scene
         ZakatCalculatorScene zakatScene = new ZakatCalculatorScene();
         Scene scene = new Scene(zakatScene.getLayout(), 600, 500);
         
