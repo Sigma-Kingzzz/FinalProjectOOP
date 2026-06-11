@@ -6,7 +6,8 @@ import javafx.scene.text.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import Employee.Employee;
-
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 public class LoginView {
 
     private final Stage stage;
@@ -46,8 +47,10 @@ public class LoginView {
         content.setAlignment(Pos.CENTER);
         content.setPadding(new Insets(40));
 
-        Label logo = new Label("💼");
-        logo.setStyle("-fx-font-size: 64px;");
+        Image logo = new Image("https://cdn-icons-png.flaticon.com/512/4440/4440484.png");
+        ImageView logoview = new ImageView(logo);
+        logoview.setFitHeight(200);
+        logoview.setFitWidth(200);
 
         Text title = new Text("PayrollPro");
         title.getStyleClass().add("brand-title");
@@ -63,7 +66,7 @@ public class LoginView {
         tagline.getStyleClass().add("brand-tagline");
         tagline.setTextAlignment(TextAlignment.CENTER);
 
-        content.getChildren().addAll(logo, title, subtitle, sep, tagline);
+        content.getChildren().addAll(logoview, title, subtitle, sep, tagline);
         panel.getChildren().add(content);
         return panel;
     }
